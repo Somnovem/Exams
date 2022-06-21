@@ -3,8 +3,15 @@
 #include <time.h>
 #include <random>
 #include <iomanip>
+#include <fstream>
 int sizeN = 0;
 long long moves = 0;
+/// <summary>
+/// Checks if the number can be put into the grid
+/// </summary>
+/// <param name="arr"> - the grid</param>
+/// <param name="fill"> - the number</param>
+/// <returns>1 or 0</returns>
 bool checkIfCanInput(int arr[], int fill) {
 	if (fill < 0 || fill >= sizeN)
 	{
@@ -19,6 +26,10 @@ bool checkIfCanInput(int arr[], int fill) {
 	}
 	return 1;
 }
+/// <summary>
+/// Displays the grid
+/// </summary>
+/// <param name="arr"> - the grid</param>
 void print(int arr[]) {
 	int newLine = 0;
 	if (sizeN > 9)
@@ -38,8 +49,12 @@ void print(int arr[]) {
 		}
 	}
 }
+/// <summary>
+/// Proccess of filling the grid manually
+/// </summary>
+/// <param name="field"> - the grid</param>
 void manualFill(int*& field) {
-	for (int i = 0; i < sizeN;)
+	for (int i = 0; i < sizeN-1;)
 	{
 		print(field);
 		int place = 0;
@@ -61,11 +76,15 @@ void manualFill(int*& field) {
 		std::system("cls");
 	}
 }
+/// <summary>
+/// Fills the grid with appropriate random numbers without repeating
+/// </summary>
+/// <param name="field"> - the grid</param>
 void randomFill(int*& field) {
 
-	for (int i = 0; i < sizeN;)
+	for (int i = 0; i < sizeN-1;)
 	{
-		int filling = rand() % sizeN;
+		int filling = rand() % (sizeN-1) + 1;
 		if (checkIfCanInput(field, filling))
 		{
 			field[i] = filling;
@@ -76,6 +95,11 @@ void randomFill(int*& field) {
 	std::system("pause");
 	std::system("cls");
 }
+/// <summary>
+/// Checks wether the game is completed
+/// </summary>
+/// <param name="arr"> - the grid</param>
+/// <returns> 1 or 0</returns>
 bool check(int arr[]) {
 	for (int i = 0; i < sizeN-2; i++)
 	{
@@ -90,6 +114,12 @@ bool check(int arr[]) {
 	}
 	return 1;
 }
+/// <summary>
+/// Looks for the number in the grid
+/// </summary>
+/// <param name="arr"> - the grid</param>
+/// <param name="value"> - the number</param>
+/// <returns> pos of the num in the grid</returns>
 int findAValue(int arr[], int value) {
 	for (int i = 0; i < sizeN; i++)
 	{
@@ -100,6 +130,11 @@ int findAValue(int arr[], int value) {
 	}
 	return NULL;
 }
+/// <summary>
+/// Finds the zero in the grid
+/// </summary>
+/// <param name="arr"> - the grid</param>
+/// <returns>pos of zero in the grid</returns>
 int findZero(int arr[]) {
 	for (int i = 0; i < sizeN; i++)
 	{
@@ -109,109 +144,10 @@ int findZero(int arr[]) {
 		}
 	}
 }
-void pcIsPlaying(int*& field) {
-	int lineMoving = (sizeN > 9) ? 4 : 3;
-	int previous = 0;
-	if (sizeN > 9)
-	{
-		while (!check(field))
-		{
-			int zero = findZero(field);
-			int options[4]{};
-			int current = 0;
-			if (field[zero - 1] > 0 && zero - 1 != 3 && zero - 1 != 7 && zero - 1 != 11 && field[zero - 1] < sizeN && previous != 2)
-			{
-				options[current] = 1;
-				current++;
-			}
-			if (field[zero + 1] > 0 && zero + 1 != 4 && zero + 1 != 8 && zero + 1 != 12 && field[zero + 1] < sizeN && previous != 1)
-			{
-				options[current] = 2;
-				current++;
-			}
-			if (field[zero + lineMoving] > 0 && field[zero + lineMoving] < sizeN && previous != 4)
-			{
-				options[current] = 3;
-				current++;
-			}
-			if (field[zero - lineMoving] > 0 && field[zero - lineMoving] < sizeN && previous != 3)
-			{
-				options[current] = 4;
-				current++;
-			}
-			int moving = options[rand() % current];
-			previous = moving;
-			switch (moving)
-			{
-			case 1:
-				std::swap(field[zero], field[zero - 1]);
-				break;
-			case 2:
-				std::swap(field[zero], field[zero + 1]);
-				break;
-			case 3:
-				std::swap(field[zero], field[zero + lineMoving]);
-				break;
-			case 4:
-				std::swap(field[zero], field[zero - lineMoving]);
-				break;
-			default:
-				break;
-			}
-			moves++;
-		}
-	}
-	else
-	{
-		while (!check(field))
-		{
-			int zero = findZero(field);
-			int options[4]{};
-			int current = 0;
-			if (field[zero - 1] > 0 && zero - 1 != 2 && zero - 1 != 5 && field[zero - 1] < 9 && previous != 2)
-			{
-				options[current] = 1;
-				current++;
-			}
-			if (field[zero + 1] > 0 && zero + 1 != 3 && zero + 1 != 6 && field[zero + 1] < 9 && previous != 1)
-			{
-				options[current] = 2;
-				current++;
-			}
-			if (field[zero + lineMoving] > 0 && field[zero + lineMoving] < 9 && previous != 4)
-			{
-				options[current] = 3;
-				current++;
-			}
-			if (field[zero - lineMoving] > 0 && field[zero - lineMoving] < 9 && previous != 3)
-			{
-				options[current] = 4;
-				current++;
-			}
-			int moving = options[rand() % current];
-			previous = moving;
-			switch (moving)
-			{
-			case 1:
-				std::swap(field[zero], field[zero - 1]);
-				break;
-			case 2:
-				std::swap(field[zero], field[zero + 1]);
-				break;
-			case 3:
-				std::swap(field[zero], field[zero + lineMoving]);
-				break;
-			case 4:
-				std::swap(field[zero], field[zero - lineMoving]);
-				break;
-			default:
-				break;
-			}
-			moves++;
-		}
-	}
-
-}
+/// <summary>
+/// Proccess of player playing
+/// </summary>
+/// <param name="field"> - the field</param>
 void playerIsPlaying(int*& field) {
 	int lineMoving = (sizeN > 9) ? 4 : 3;
 	int value = 0;
@@ -262,12 +198,23 @@ void playerIsPlaying(int*& field) {
 	}
 	
 }
-void main() {
+int main() {
+	int record = 0;
+	std::string filename = "out.txt";
+	std::ifstream fileIn;
+	fileIn.open(filename);
+	if (fileIn.fail())
+	{
+		std::cout << "Could not open the file" << std::endl;
+		return 404;
+	}
+	fileIn >> record;
+	fileIn.close();
 	srand(time(NULL));
 	int choice = 0;
 	time_t time_start;
 	time_t time_end;
-l1: 
+l1:
 	moves = 0;
 	system("cls");
 	std::cout << "Choose the game mode:\n 1 - 3x3\n 2 - 4x4\n";
@@ -285,12 +232,11 @@ l1:
 		goto l1;
 		break;
 	}
-	int* field = new int[sizeN];
-l2:
+	int* field = new int[sizeN] {};
+l2: 
 	system("cls");
 	std::cout << "Choose how to fill in the grid:\n 1 - manually\n 2 - randomly\n";
 	std::cin >> choice;
-
 	switch (choice)
 	{
 	case 1:
@@ -304,15 +250,6 @@ l2:
 		goto l2;
 		break;
 	}
-l3: 
-	system("cls");
-	std::cout << "Choose who is going to play:\n 1 - player\n 2 - PC\n";
-	std::cin >> choice;
-	switch (choice)
-	{
-	case 1:
-		system("pause");
-		system("cls");
 		time(&time_start);
 		playerIsPlaying(field);
 		time(&time_end);
@@ -320,27 +257,27 @@ l3:
 		std::cout << "Congrats!" << std::endl;
 		std::cout << "Game lasted for " <<time_end - time_start <<" seconds." << std::endl;
 		std::cout << "It took " << moves << " to solve the puzzle" << std::endl;
+		if (moves < record)
+		{
+			std::cout << "You beat the record! The last record was: " << record << " moves " << std::endl;
+			record = moves;
+			std::ofstream fileOut;
+			fileOut.open(filename);
+			if (fileIn.fail())
+			{
+				std::cout << "Could not open the file" << std::endl;
+				return 404;
+			}
+			fileOut << record;
+			fileOut.close();
+		}
+		else
+		{
+			std::cout << "The record of " << record << " remains unbeatable. Good luck next try!" << std::endl;
+		}
 		std::cout << "Do you want to restart the game?\n 1 - yes\n 2 - no\n";
 		std::cin >> choice;
 		if (choice == 1) goto l1;
-		break;
-	case 2:
-		system("pause");
-		system("cls");
-		time(&time_start);
-		pcIsPlaying(field);
-		time(&time_end);
-		print(field);
-		std::cout << "\a\a\a\a\aGame lasted for " << time_end - time_start << " seconds." << std::endl;
-		std::cout << "It took " << moves << " to solve the puzzle" << std::endl;
-		std::cout << "Do you want to restart the game?\n 1 - yes\n 2 - no\n";
-		std::cin >> choice;
-		if (choice == 1) goto l1;
-		break;
-	default:
-		std::cout << "INVALID INPUT" << std::endl;
-		goto l3;
-		break;
-	}
+		return 0;
 }
 
