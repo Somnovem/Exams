@@ -1,0 +1,9 @@
+﻿  main.cpp
+C:\Users\Artem\source\repos\Exam\Puzzle\main.cpp(265,13): warning C4326: возвращаемый тип "main" должен быть "int", а не "void"
+C:\Users\Artem\source\repos\Exam\Puzzle\main.cpp(266,12): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+  Создание кода
+  Previous IPDB not found, fall back to full compilation.
+C:\Users\Artem\source\repos\Exam\Puzzle\main.cpp(111): warning C4715: findZero: значение возвращается не при всех путях выполнения
+  All 25 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Создание кода завершено
+  Puzzle.vcxproj -> C:\Users\Artem\source\repos\Exam\x64\Release\Puzzle.exe
