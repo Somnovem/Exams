@@ -1,6 +1,6 @@
 #include <iostream>
 #include <ctime>
-#include <time.h> // Ўанс срабатывани€ 60% в 3 на 3, в 4 на 4 ты просто не дождешс€ когда он его соберет
+#include <time.h>
 #include <random>
 #include <iomanip>
 int sizeN = 0;
@@ -267,7 +267,7 @@ void main() {
 	int choice = 0;
 	time_t time_start;
 	time_t time_end;
-l1: //≈сли режим был выбран неправильно или рестарт
+l1: 
 	moves = 0;
 	system("cls");
 	std::cout << "Choose the game mode:\n 1 - 3x3\n 2 - 4x4\n";
@@ -286,7 +286,7 @@ l1: //≈сли режим был выбран неправильно или рестарт
 		break;
 	}
 	int* field = new int[sizeN];
-l2: //≈сли способ заполнени€ был выбран неправильно
+l2:
 	system("cls");
 	std::cout << "Choose how to fill in the grid:\n 1 - manually\n 2 - randomly\n";
 	std::cin >> choice;
@@ -304,7 +304,7 @@ l2: //≈сли способ заполнени€ был выбран неправильно
 		goto l2;
 		break;
 	}
-l3: //≈сли игрок был выбран неправильно
+l3: 
 	system("cls");
 	std::cout << "Choose who is going to play:\n 1 - player\n 2 - PC\n";
 	std::cin >> choice;
