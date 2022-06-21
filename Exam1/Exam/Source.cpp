@@ -10,7 +10,7 @@ int main() {
 	int choice = 0;
 	while (true)
 	{
-		std::cout << "Do you want to read the line from a file or to type it in?:\n 1 - read\n 2 - type\n" << std::endl;
+		std::cout << "Выберите хотите ли вы считать строчку или ввести:\n 1 - считать\n 2 - ввести\n" << std::endl;
 		std::cin >> choice;
 		if (choice == 1)
 		{
@@ -19,7 +19,7 @@ int main() {
 			fileIn.open(filename);
 			if (fileIn.fail())
 			{
-				std::cout << "Reading failed" << std::endl;
+				std::cout << "Ошибка открытия файла" << std::endl;
 				return 404;
 			}
 			fileIn >> word;
@@ -28,7 +28,7 @@ int main() {
 		}
 		else if (choice == 2)
 		{
-			std::cout << "Type in your word(Only English Upper case): ";
+			std::cout << "Введите слово(английские буквы): ";
 			std::cin >> word;
 			std::cout << std::endl;
 			break;
@@ -40,11 +40,11 @@ int main() {
 			std::system("cls");
 		}
 	}
-		std::cout << "What do you want to do with the line:\n 1 - Encrypt\n 2 - Decrypt\n";
+		std::cout << "Выберите действие:\n 1 - зашифровать\n 2 - расшифровать\n";
 		std::cin >> choice;
 		if (choice == 1)
 		{
-			std::cout << "Type in the key word(Only English Upper case)" << std::endl;
+			std::cout << "Введите кодовое слово(английские буквы)" << std::endl;
 			std::cin >> temp;
 			key = word;
 			if (temp > word)
@@ -90,7 +90,7 @@ int main() {
 			}
 			std::cout << cyphered << std::endl;
 			char answer;
-			std::cout << "Do you want to save the result to a file?[y/n] ";
+			std::cout << "Хотите сохранить результат в файл?[y/n] ";
 			std::cin >> answer;
 			if (answer == 'y')
 			{
@@ -99,7 +99,7 @@ int main() {
 				fileOut.open(filename);
 				if (fileOut.fail())
 				{
-					std::cout << "Writing failed" << std::endl;
+					std::cout << "Ошибка открытия файла" << std::endl;
 					return 404;
 				}
 				fileOut << cyphered;
@@ -108,7 +108,7 @@ int main() {
 		}
 		else if (choice == 2)
 		{
-			std::cout << "Type in the key word(Only English Upper case)" << std::endl;
+			std::cout << "Введите кодовое слово(английские буквы)" << std::endl;
 			std::cin >> temp;
 			key = word;
 			if (temp < word)
@@ -145,7 +145,7 @@ int main() {
 			}
 			std::cout << decyphered << std::endl;
 			char answer = 0;
-			std::cout << "Do you want to save the result to a file?[y/n] ";
+			std::cout << "Хотите сохранить результат в файл?[y/n] ";
 			std::cin >> answer;
 			if (answer == 'y')
 			{
@@ -154,7 +154,7 @@ int main() {
 				fileOut.open(filename);
 				if (fileOut.fail())
 				{
-					std::cout << "Writing failed" << std::endl;
+					std::cout << "Ошибка открытия файла" << std::endl;
 					return 404;
 				}
 				fileOut << decyphered;
@@ -163,7 +163,7 @@ int main() {
 		}
 		else
 		{
-			std::cout << "INVALID INPUT" << std::endl;
+			std::cout << "Ошибка ввода" << std::endl;
 		}
 	return 0;
 }
