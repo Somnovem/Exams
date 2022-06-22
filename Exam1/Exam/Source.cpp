@@ -47,8 +47,8 @@ std::string encrypt(std::string str, std::string key) {
 	std::string encrypted;
 	for (int i = 0; i < str.length(); i++)
 	{
-				temp = (findLetterInLib(str[i]) + findLetterInLib(key[i])) % lib.length();
-				encrypted += lib[temp];
+		temp = (findLetterInLib(str[i]) + findLetterInLib(key[i])) % lib.length();
+		encrypted += lib[temp];
 	}
 	std::cout << encrypted << std::endl;
 	return encrypted;
@@ -138,7 +138,7 @@ int main() {
 	std::cin >> choice;
 	if (choice == 1)
 	{
-		word = encrypt(word,key);
+		word = encrypt(word, key);
 	}
 	else if (choice == 2)
 	{
@@ -148,7 +148,7 @@ int main() {
 	{
 		std::cout << "INVALID INPUT" << std::endl;
 	}
-	char answer;
+	char answer = 0;
 	std::cout << "Do you want to save the result to a file?[y/n]: ";
 	std::cin >> answer;
 	if (answer == 'y')
@@ -157,7 +157,7 @@ int main() {
 		fileOut.open(filename);
 		if (fileOut.fail())
 		{
-		    std::cout << "Writing failed" << std::endl;
+			std::cout << "Writing failed" << std::endl;
 			return 404;
 		}
 		fileOut << word;

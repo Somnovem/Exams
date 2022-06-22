@@ -1,3 +1,5 @@
 ﻿D:\Visual Studio\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(514,5): warning MSB8028: промежуточный каталог (x64\Debug\) содержит файлы, которые используются совместно с другим проектом (Exam.vcxproj).  Это может привести к ошибкам очистки и перестроения.
   Source.cpp
-  Exam.vcxproj -> C:\Users\Artem\source\repos\Exam\x64\Debug\Vigenère.exe
+C:\Users\Artem\Documents\GitHub\Exams\Exam1\Exam\Source.cpp(70,22): warning C4267: +=: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\Artem\Documents\GitHub\Exams\Exam1\Exam\Source.cpp(38): warning C4715: findLetterInLib: значение возвращается не при всех путях выполнения
+  Exam.vcxproj -> C:\Users\Artem\Documents\GitHub\Exams\Exam1\x64\Debug\Vigenère.exe
