@@ -61,7 +61,7 @@ void manualFill(int*& field) {
 		int filling = 0;
 		std::cout << "Choose where to place a number : ";
 		std::cin >> place;
-		std::cout << "Choose a number from 0 to " << sizeN-1 << " : ";
+		std::cout << "Choose a number from 1 to " << sizeN-1 << " : ";
 		std::cin >> filling;
 		if (checkIfCanInput(field, filling) && place >= 1 && place <= sizeN)
 		{

@@ -76,6 +76,8 @@ std::string decrypt(std::string str, std::string key) {
 }
 int main() {
 	MakeLib();
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
 	std::string word, key;
 	std::string temp;
 	int choice = 0;
