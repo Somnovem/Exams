@@ -20,6 +20,7 @@ std::string MakeLib() {
 	{
 		lib += (char)i;
 	}
+	lib += ' ';
 	return lib;
 }
 /// <summary>
@@ -62,7 +63,7 @@ std::string encrypt(std::string str, std::string key) {
 std::string decrypt(std::string str, std::string key) {
 	int temp;
 	std::string encrypted;
-	for (int i = 0; i < str.length(); i++)
+	for (int i = 0; i < str.length()-2; i++)
 	{
 		temp = findLetterInLib(str[i]) - findLetterInLib(key[i]);
 		if (temp < 0)
@@ -95,7 +96,13 @@ int main() {
 				std::cout << "Reading failed" << std::endl;
 				return 404;
 			}
-			fileIn >> word;
+			while (!fileIn.eof())
+			{
+				std::string line;
+				fileIn >> line;
+				word += line + ' ';
+			}
+
 			std::cout << "The line: " << word << std::endl;
 			fileIn.close();
 			break;
