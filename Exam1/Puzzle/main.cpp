@@ -165,6 +165,8 @@ void playerIsPlaying(int*& field) {
 			{
 				std::swap(field[found], field[zero]);
 				moves++;
+				std::cout << "moves: " << moves << std::endl;
+				system("pause");
 			}
 			else
 			{
@@ -187,6 +189,8 @@ void playerIsPlaying(int*& field) {
 			{
 				std::swap(field[found], field[zero]);
 				moves++;
+				std::cout << "moves: " << moves << std::endl;
+				system("pause");
 			}
 			else
 			{

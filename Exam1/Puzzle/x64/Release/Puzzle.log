@@ -1,9 +1,9 @@
 ﻿  main.cpp
-C:\Users\Artem\Documents\GitHub\Exams\Exam1\Puzzle\main.cpp(213,12): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
-C:\Users\Artem\Documents\GitHub\Exams\Exam1\Puzzle\main.cpp(263,13): warning C4244: =: преобразование "__int64" в "int", возможна потеря данных
+C:\Users\Artem\Documents\GitHub\Exams\Exam1\Puzzle\main.cpp(217,12): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+C:\Users\Artem\Documents\GitHub\Exams\Exam1\Puzzle\main.cpp(267,13): warning C4244: =: преобразование "__int64" в "int", возможна потеря данных
   Создание кода
   2 of 174 functions ( 1.1%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
+    2 functions had inline decision re-evaluated but remain unchanged
   Создание кода завершено
   Puzzle.vcxproj -> C:\Users\Artem\Documents\GitHub\Exams\Exam1\x64\Release\Puzzle.exe
