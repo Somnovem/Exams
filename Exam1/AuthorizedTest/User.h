@@ -1,17 +1,13 @@
 #pragma once
-class Aplication
-{
-	User* user = nullptr;
-	void reg() {}
-	void log() {}
-	void exit() {}
-};
+#include <iostream>
+using namespace std;
 class User abstract
-{protected:
-	string name;
+{
+protected:
+	std::string name;
 	int age;
-	string phone;
-	string adress;
+	std::string phone;
+	std::string adress;
     public:
 	virtual void menu() = 0;
 };
