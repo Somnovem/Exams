@@ -73,7 +73,7 @@ public:
 							cout << "New password: ";
 							string temp;
 							getline(cin, temp);
-							if (temp.size() < 8 || temp.size() > 16)
+							if (temp.size() < 12 || temp.size() > 24)
 							{
 								gotoxy(12, 13);
 								cout << "Incorrect size" << endl;
@@ -121,9 +121,9 @@ public:
 						{
 							system("cls");
 							cout << "Login: " << login << endl;
-							cout << "Password(from 8 to 16 symbols): ";
+							cout << "Password(from 12 to 24 symbols): ";
 							getline(cin, password);
-							if (password.length() < 8 || password.length() > 16)
+							if (password.length() < 12 || password.length() > 24)
 							{
 								cout << "Incorrect length of password" << endl;
 								system("pause");
