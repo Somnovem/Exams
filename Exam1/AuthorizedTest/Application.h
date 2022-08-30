@@ -71,13 +71,16 @@ class Application
 		if (fs::is_empty("Data\\Admins"))
 		{
 			out.open("Data\\Admins\\" + login + ".txt");
+			user = new Admin("Data\\Admins\\" + login + ".txt");
 		}
 		else
 		{
 			out.open("Credentials\\" + login + ".txt");
+			user = new Guest("Credentials\\" + login + ".txt");
 		}
 		out << md5(password) << endl;
 		out.close();
+		user->menu();
 	}
 	void log()
 	{
@@ -101,6 +104,7 @@ class Application
 			if (fs::exists("Data\\Admins\\" + login + ".txt"))
 			{
 				path = "Data\\Admins\\" + login + ".txt";
+				user = new Admin(path);
 				break;
 			}
 			if (!fs::exists("Credentials\\" + login + ".txt"))
@@ -110,6 +114,7 @@ class Application
 				continue;
 			}
 			path = "Credentials\\" + login + ".txt";
+			user = new Guest(path);
 			break;
 		}
 		ifstream in(path);
@@ -140,7 +145,7 @@ class Application
 			system("pause");
 			return;
 		}
-
+		user->menu();
 	}
 public:
 	Application() {}

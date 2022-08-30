@@ -31,7 +31,7 @@ public:
 		int x = 0;
 		switch (ha)
 		{
-		case Center: x = 40 - maxLen / 2; break;
+		case Center: x = 20 - maxLen / 2; break;
 		case Left:   x = 0;	              break;
 		case Right:  x = 80 - maxLen;     break;
 		}
@@ -90,7 +90,7 @@ public:
 		return pos;
 	}
 
-	int select_gorizontal(vector<string> menu)
+	static int select_gorizontal(vector<string> menu)
 	{
 		int max_len = 0;
 		for (int i = 0; i < menu.size(); i++)

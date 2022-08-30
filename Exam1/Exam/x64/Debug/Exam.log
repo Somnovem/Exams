@@ -1,5 +1,5 @@
-﻿D:\Visual Studio\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(514,5): warning MSB8028: промежуточный каталог (x64\Debug\) содержит файлы, которые используются совместно с другим проектом (Exam.vcxproj).  Это может привести к ошибкам очистки и перестроения.
+﻿D:\Visual Studio\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(514,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (Exam.vcxproj).  This can lead to incorrect clean and rebuild behavior.
   Source.cpp
-C:\Users\Artem\Documents\GitHub\Exams\Exam1\Exam\Source.cpp(70,22): warning C4267: +=: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\Artem\Documents\GitHub\Exams\Exam1\Exam\Source.cpp(38): warning C4715: findLetterInLib: значение возвращается не при всех путях выполнения
+C:\Users\Artem\Documents\GitHub\Exams\Exam1\Exam\Source.cpp(71,22): warning C4267: '+=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Artem\Documents\GitHub\Exams\Exam1\Exam\Source.cpp(39): warning C4715: 'findLetterInLib': not all control paths return a value
   Exam.vcxproj -> C:\Users\Artem\Documents\GitHub\Exams\Exam1\x64\Debug\Vigenère.exe
