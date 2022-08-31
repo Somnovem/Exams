@@ -38,10 +38,11 @@ public:
 	
 	virtual void menu()noexcept override
 	{
-		while (true)
+		int c = 0;
+		while (c  <4)
 		{
 			system("cls");
-			int c = Menu::select_vertical({"Change own credentials","Work with users","Statistics","Work with tests","Exit"}, HorizontalAlignment::Left, 18);
+			 c = Menu::select_vertical({"Change own credentials","Work with users","Statistics","Work with tests","Exit"}, HorizontalAlignment::Left, 18);
 			switch (c)
 			{
 			case 0:
@@ -325,10 +326,7 @@ public:
 				}
 			}
 				break;
-			case 4:
-				gotoxy(30, 13);
-				cout << "Exiting...";
-				exit(0);
+			default:
 				break;
 			}
 		}

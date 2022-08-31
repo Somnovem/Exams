@@ -85,10 +85,10 @@ class Application
 	void log()
 	{
 		system("cls");
-		if (!fs::exists("Credentials")
-			|| fs::is_empty("Credentials")
-			|| !fs::exists("Data\\Admins")
-			|| fs::is_empty("Data\\Admins"))
+		if ((!fs::exists("Credentials")
+			|| fs::is_empty("Credentials"))
+			&& (!fs::exists("Data\\Admins")
+			|| fs::is_empty("Data\\Admins")))
 		{
 			gotoxy(30, 15);
 			cout << "No recorded logins" << endl;
@@ -151,17 +151,20 @@ public:
 	Application() {}
 	void menu()
 	{
-		int c = Menu::select_vertical({ "Register","Login","Exit" }, HorizontalAlignment::Center);
-		switch (c)
+		while (true)
 		{
-		case 0:
-			reg();
-			break;
-		case 1:
-			log();
-			break;
-		case 2:
-			exit(0);
+			int c = Menu::select_vertical({ "Register","Login","Exit" }, HorizontalAlignment::Center);
+			switch (c)
+			{
+			case 0:
+				reg();
+				break;
+			case 1:
+				log();
+				break;
+			case 2:
+				exit(0);
+			}
 		}
 	}
 };

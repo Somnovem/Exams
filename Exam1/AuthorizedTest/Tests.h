@@ -28,7 +28,7 @@ public:
 		{
 			return *this;
 		}
-		if (this)
+		if (this != nullptr)
 		{
 			delete this;
 		}
@@ -44,10 +44,9 @@ public:
 		int c = Menu::select_vertical(answers, HorizontalAlignment::Center, 7);
 		if (c == correct)
 		{
-			cout << "Correct" << endl;
 			return true;
 		}
-		return 0;
+		return false;
 	}
 };
 class Test
@@ -86,14 +85,30 @@ public:
 	}
 	void play()
 	{
-		int correct = 0;
-		for_each(test.begin(), test.end(), [&correct](Question temp) {correct+=temp.pass(); });
+		vector<bool> correctness;
+		for_each(test.begin(), test.end(), [&correctness](Question temp) {correctness.push_back(temp.pass()); });
 		system("cls");
-		double percent = (correct / test.size())*100;
+		size_t correct = count(correctness.begin(), correctness.end(), true);
+		double percent = (static_cast<double>(correct) / test.size()) * 100;
 		gotoxy(20, 13);
 		cout << "Correct amswers: " << correct << " / " << test.size() << endl;
 		gotoxy(20, 14);
 		cout << "Percentage:  " << percent << "%" << endl;
+		if (correct != test.size())
+		{
+			auto findMistakes = [&correctness]()
+			{
+				int i = 1;
+				for_each(correctness.begin(), correctness.end(), [&i](bool answer) {
+					if (!answer)
+						cout << i << " ";
+					i++; });
+			};
+			gotoxy(20, 15);
+			cout << "Mistakes in questions: ";
+			findMistakes();
+			cout << endl;
+		}
 		system("pause");
 	}
 };
