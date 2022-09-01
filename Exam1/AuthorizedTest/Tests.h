@@ -6,6 +6,8 @@
 #include <algorithm>
 #include <fstream>
 #include <string>
+#include <chrono>
+#include <ctime>
 #include <experimental/filesystem>
 using namespace std;
 namespace fs = std::experimental::filesystem;
@@ -83,17 +85,22 @@ public:
 	{
 		test.push_back(quest);
 	}
-	void play()
+	void play(const string& pathToTest,const string& user)
 	{
+		auto start = std::chrono::system_clock::now();
 		vector<bool> correctness;
 		for_each(test.begin(), test.end(), [&correctness](Question temp) {correctness.push_back(temp.pass()); });
+		auto end = std::chrono::system_clock::now();
 		system("cls");
 		size_t correct = count(correctness.begin(), correctness.end(), true);
 		double percent = (static_cast<double>(correct) / test.size()) * 100;
-		gotoxy(20, 13);
+		int m = 13;
+		gotoxy(20, m++);
 		cout << "Correct amswers: " << correct << " / " << test.size() << endl;
-		gotoxy(20, 14);
+		gotoxy(20, m++);
 		cout << "Percentage:  " << percent << "%" << endl;
+		std::chrono::duration<double> elapsed_seconds = end - start;
+		std::time_t end_time = std::chrono::system_clock::to_time_t(end);
 		if (correct != test.size())
 		{
 			auto findMistakes = [&correctness]()
@@ -104,11 +111,26 @@ public:
 						cout << i << " ";
 					i++; });
 			};
-			gotoxy(20, 15);
+			gotoxy(20, m++);
 			cout << "Mistakes in questions number: ";
 			findMistakes();
 			cout << endl;
 		}
+		gotoxy(20, m++);
+		cout << "Time spent: " << elapsed_seconds.count() << " s" << endl;
+		gotoxy(20, m++);
+		cout << "Finished at: " << std::ctime(&end_time);
+		string testName;
+		testName.assign(pathToTest.begin() + pathToTest.find_last_of("\\") + 1, pathToTest.end());
+		string login;
+		login.assign(user.begin() + user.find_last_of("\\") + 1, user.begin() + user.find_last_of("."));
+		ofstream out("Data\\Statistics\\" + testName  + ".txt",ios::app);
+		out << "Time spent: " << elapsed_seconds.count() << " s" << endl;
+		out << "Finished at: " <<  std::ctime(&end_time);
+		out << login << endl;
+		out << "Correct amswers: " << correct << " / " << test.size() << endl;
+		out << "-------------------------------------" << endl;
+		out.close();
 		system("pause");
 	}
 };

@@ -1,0 +1,11 @@
+Time spent: 8.51039
+Finished at: Thu Sep  1 19:07:06 2022
+
+admin
+Correct amswers: 4 / 4
+-------------------------------------
+Time spent: 8.2699 s
+Finished at: Thu Sep  1 19:11:30 2022
+admin
+Correct amswers: 3 / 4
+-------------------------------------

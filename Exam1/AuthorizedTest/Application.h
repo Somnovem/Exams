@@ -1,12 +1,5 @@
 #pragma once
 #include "User.h"
-#include "md5.h"
-#include <experimental/filesystem>
-#include <string>
-#include <fstream>
-#include "../Library/Functions.h"
-#include "../Library/Menu.h"
-namespace fs = std::experimental::filesystem;
 class Application
 {
 	User* user = nullptr;
@@ -165,6 +158,8 @@ public:
 			case 2:
 				exit(0);
 			}
+			delete user;
+			user = nullptr;
 		}
 	}
 };

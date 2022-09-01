@@ -1,20 +1,9 @@
 #pragma once
-#include<iostream>
-#include <fstream>
-#include<experimental/filesystem>
-#include "../Library/Menu.h"
-#include "../Library/Functions.h"
 #include "Tests.h"
 #include "md5.h"
-using namespace std;
-namespace fs = std::experimental::filesystem;
 class User abstract
 {
 protected:
-	string name;
-	int age = 0;
-	string phone;
-	string adress;
 	string path;
     public:
 	User(const string path) : path{ path } {}
@@ -58,7 +47,8 @@ public:
 						cout << "New login: ";
 						getline(cin, temp);
 						string tempPath(path);
-						string login(tempPath.substr(12, tempPath.find_last_of("\\") - 12));
+						string login;
+						login.assign(tempPath.begin() + tempPath.find_last_of("\\"),temp.begin() + tempPath.find_last_of("."));
 						tempPath.erase(12, login.size());
 						tempPath.insert(12, temp);
 						tempPath += ".txt";
@@ -178,6 +168,109 @@ public:
 				break;
 			case 2:
 			{
+				system("cls");
+				c = Menu::select_vertical({"Stats by test","Stats by user","Stats overall","Exit"}, HorizontalAlignment::Center, 10);
+				switch (c)
+				{
+				case 0:
+				{
+					vector<string> tests;
+					string path = "Data\\Statistics\\";
+					for (const auto& a : fs::directory_iterator(path))
+					{
+						tests.push_back(a.path().u8string());
+					}
+					if (tests.size() == 0)
+					{
+						gotoxy(30, 15);
+						cout << "No records" << endl;
+						system("pause");
+						break;
+					}
+					vector<string> show(tests);
+					for_each(show.begin(), show.end(), [](string& s)
+					{
+							s.erase(s.begin(), s.begin() + s.find_last_of("\\") + 1);
+							s.erase(s.begin() + s.find_last_of(".") ,s.end());
+					});
+					c = Menu::select_vertical(show, HorizontalAlignment::Center, 10);
+					path = tests[c];
+					ifstream in;
+					string temp;
+					in.open(path);
+					while (getline(in,temp))
+					{
+						cout << temp << endl;
+					}
+					in.close();
+					system("pause");
+					break;
+				}
+					break;
+				case 1:
+				{
+					system("cls");
+					gotoxy(40, 14);
+					string login;
+					cout << "Login of the user whose stats to show: ";
+					getline(cin, login);
+					if (!fs::exists("Credentials\\" + login + ".txt") && !fs::exists("Data\\Admins\\" + login + ".txt"))
+					{
+						gotoxy(40, 15);
+						cout << "No such login exists" << endl;
+					}
+					else
+					{
+						system("cls");
+						vector<string> tests;
+						string path = "Data\\Statistics\\";
+						for (const auto& a : fs::directory_iterator(path))
+						{
+							tests.push_back(a.path().u8string());
+						}
+						ifstream in;
+						string holder;
+						string temp;
+						for_each(tests.begin(), tests.end(), [&in,&holder,&temp,&login](string& test)
+							{
+								holder.clear();
+								in.open(test);
+								while (getline(in,temp))
+								{
+									holder += temp;
+								}
+								int m = 0;
+								temp.assign(test.begin() + test.find_last_of("\\") + 1, test.begin() + test.find_last_of("."));;
+								while (true)
+								{
+									if (holder.find(login, m) != string::npos)
+									{
+										m = holder.find(login, m);
+										m += login.size();
+										cout << temp << endl;
+										while (holder[m] != '-')
+										{
+											cout << holder[m++];
+										} 
+										cout << endl;
+										cout << "----------------------------" << endl;
+										continue;
+									}
+									break;
+								}
+							});
+					}
+					
+				}
+				system("pause");
+					break;
+				case 2:
+				{
+				}
+				break;
+				default:
+					break;
+				}
 			}
 				break;
 			case 3:
@@ -586,7 +679,8 @@ public:
 						path += "\\";
 						Test test;
 						test.constructTest(path);
-						test.play();
+						path.pop_back();
+						test.play(path,this->path);
 					}
 						break;
 					default:
@@ -601,4 +695,3 @@ public:
 		}
 	}
 };
-
