@@ -260,12 +260,35 @@ public:
 								}
 							});
 					}
-					
+					system("pause");
 				}
-				system("pause");
 					break;
 				case 2:
 				{
+					system("cls");
+					vector<string> tests;
+					for (const auto& a : fs::directory_iterator("Data\\Statistics"))
+					{
+						tests.push_back(a.path().u8string());
+					}
+					int entries = 0;
+					ifstream in;
+					string temp;
+					for_each(tests.begin(), tests.end(), [&](string& s)
+						{
+							in.open(s);
+							while (getline(in,temp))
+							{
+								if (temp._Starts_with("--------"))
+								{
+									entries++;
+								}
+							}
+							in.close();
+						});
+					int m = 13;
+					gotoxy(30, m++);
+					cout << "Entries: " << entries << endl;
 				}
 				break;
 				default:
