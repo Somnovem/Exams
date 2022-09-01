@@ -87,6 +87,7 @@ public:
 	}
 	void play(const string& pathToTest,const string& user)
 	{
+		
 		auto start = std::chrono::system_clock::now();
 		vector<bool> correctness;
 		for_each(test.begin(), test.end(), [&correctness](Question temp) {correctness.push_back(temp.pass()); });
@@ -99,6 +100,7 @@ public:
 		cout << "Correct amswers: " << correct << " / " << test.size() << endl;
 		gotoxy(20, m++);
 		cout << "Percentage:  " << percent << "%" << endl;
+		cout.precision(2);
 		std::chrono::duration<double> elapsed_seconds = end - start;
 		std::time_t end_time = std::chrono::system_clock::to_time_t(end);
 		if (correct != test.size())

@@ -9,3 +9,13 @@ Finished at: Thu Sep  1 19:11:30 2022
 admin
 Correct amswers: 3 / 4
 -------------------------------------
+Time spent: 8.47808 s
+Finished at: Thu Sep  1 20:08:03 2022
+admin
+Correct amswers: 3 / 4
+-------------------------------------
+Time spent: 3.705 s
+Finished at: Thu Sep  1 20:08:18 2022
+admin
+Correct amswers: 2 / 4
+-------------------------------------

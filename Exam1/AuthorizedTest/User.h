@@ -272,6 +272,7 @@ public:
 						tests.push_back(a.path().u8string());
 					}
 					int entries = 0;
+					double timeOverall = 0;
 					ifstream in;
 					string temp;
 					for_each(tests.begin(), tests.end(), [&](string& s)
@@ -283,12 +284,25 @@ public:
 								{
 									entries++;
 								}
+								if (temp._Starts_with("Time spent:"))
+								{
+									int ind = 12;
+									string time;
+									while (temp[ind] != '\0')
+									{
+										time += temp[ind++];
+									}
+									timeOverall += stod(time);
+								}
 							}
 							in.close();
 						});
 					int m = 13;
 					gotoxy(30, m++);
 					cout << "Entries: " << entries << endl;
+					gotoxy(30, m++);
+					cout << "Time spent overall: " << timeOverall << endl;
+					system("pause");
 				}
 				break;
 				default:
