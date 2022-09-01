@@ -16,7 +16,7 @@ public:
 	Guest(const string path) : User(path) {}
 	virtual void menu() noexcept override
 	{
-		cout << "Guest" << endl;
+		
 	}
 };
 
