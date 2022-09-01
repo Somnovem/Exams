@@ -284,7 +284,7 @@ public:
 								{
 									entries++;
 								}
-								if (temp._Starts_with("Time spent:"))
+								else if (temp._Starts_with("Time spent:"))
 								{
 									int ind = 12;
 									string time;
@@ -293,6 +293,10 @@ public:
 										time += temp[ind++];
 									}
 									timeOverall += stod(time);
+								}
+								else
+								{
+
 								}
 							}
 							in.close();
