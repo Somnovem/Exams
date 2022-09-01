@@ -105,7 +105,7 @@ public:
 					i++; });
 			};
 			gotoxy(20, 15);
-			cout << "Mistakes in questions: ";
+			cout << "Mistakes in questions number: ";
 			findMistakes();
 			cout << endl;
 		}

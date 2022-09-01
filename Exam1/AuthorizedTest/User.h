@@ -208,29 +208,13 @@ public:
 					}
 					
 				};
-				auto chooseTest = []()->string
+				auto chooseTest = [&]()->string
 				{
 					while (true)
 					{
 						vector<string> categories;
-						string path = "Data\\Tests\\";
-						for (const auto& a : fs::directory_iterator(path))
-						{
-							categories.push_back(a.path().u8string());
-						}
-						if (categories.size() == 0)
-						{
-							gotoxy(20, 14);
-							cout << "No records" << endl;
-							continue;
-						}
 						vector<string> show = categories;
-						for_each(show.begin(), show.end(), [](string& s) {s.erase(s.begin(), s.begin() + s.find_last_of("\\") + 1); });
-						int c = Menu::select_vertical(show, HorizontalAlignment::Center, 10);
-						path = categories[c];
-						path += "\\";
-						show.clear();
-						categories.clear();
+						string path = chooseDirectory();
 						for (const auto& a : fs::directory_iterator(path))
 						{
 							categories.push_back(a.path().u8string());
@@ -303,6 +287,291 @@ public:
 					{
 						string path = chooseTest();
 						path += "\\";
+
+						while (c < 4)
+						{
+							system("cls");
+							c = Menu::select_vertical({ "Add question","Change question","View Question","Delete question","Exit"}, HorizontalAlignment::Center, 14);
+							switch (c)
+							{
+							case 0:
+							{
+								system("cls");
+								Question temp;
+								{
+									int m = 10;
+									gotoxy(50, m++);
+									cout << "Question: ";
+									getline(cin, temp.question);
+									int ind = 1;
+									while (c < 1)
+									{
+										system("cls");
+										int cur = 5;
+										ind = 1;
+										gotoxy(15, cur++);
+										cout << temp.question << endl;
+										for_each(temp.answers.begin(), temp.answers.end(), [&cur, &ind](string& s) {gotoxy(15, cur++); cout << ind++ << ".\t" << s << endl; });
+										if (temp.answers.size() < 2)
+										{
+											gotoxy(50, m);
+											cout << "Answer: ";
+											string answer;
+											getline(cin, answer);
+											temp.answers.push_back(answer);
+										}
+										else
+										{
+											gotoxy(30, 10);
+											cout << "Add another answer?" << endl;
+											c = Menu::select_vertical({ "Yes","No" }, HorizontalAlignment::Center);
+											switch (c)
+											{
+											case 0:
+											{
+												cur = 5;
+												ind = 1;
+												gotoxy(15, cur++);
+												cout << temp.question << endl;
+												for_each(temp.answers.begin(), temp.answers.end(), [&cur, &ind](string& s) {gotoxy(15, cur++); cout << ind++ << ".\t" << s << endl; });
+												gotoxy(50, m++);
+												cout << "Answer: ";
+												string answer;
+												getline(cin, answer);
+												temp.answers.push_back(answer);
+											}
+											break;
+											default:
+												break;
+											}
+										}
+
+
+									}
+									system("cls");
+									m = 10;
+									ind = 1;
+									for_each(temp.answers.begin(), temp.answers.end(), [&m,&ind](string answer) {gotoxy(50, m++); cout << ind++ << ".\t" << answer << endl; });
+									gotoxy(50, m++);
+									cout << "Index of the correct answer: ";
+									cin >> ind;
+									temp.correct = --ind;
+									cin.ignore();
+								}
+								string lastFile;
+								for (const auto& newQuestion : fs::directory_iterator(path))
+								{
+									lastFile = newQuestion.path().u8string();
+								}
+								string newFile;
+								newFile.assign(lastFile.begin() + lastFile.find_last_of("\\") + 1, lastFile.begin() + lastFile.find_last_of("."));
+								newFile = to_string(stoi(newFile) + 1);
+								size_t ind = lastFile.find_last_of("\\") + 1;
+								for (size_t i = 0; i < newFile.size(); i++)
+								{
+									lastFile[ind++] = newFile[i];
+								}
+								ofstream out(lastFile);
+								out << temp.question << "\n";
+								out << temp.correct << "\n";
+								for_each(temp.answers.begin(), temp.answers.end(), [&out](string s) {out << s << endl; });
+								out.close();
+
+							}
+								break;
+							case 1:
+							{
+								system("cls");
+								vector<string> questions;
+								for (const auto& a : fs::directory_iterator(path))
+								{
+									questions.push_back(a.path().u8string());
+								}
+								vector<string> show(questions);
+								for_each(show.begin(), show.end(), [](string& str) {str.erase(str.begin(), str.begin() + str.find_last_of("\\") + 1); });
+								for_each(show.begin(), show.end(), [](string& str) {str.erase(str.begin() + str.find_first_of("."), str.end()); });
+								int g = Menu::select_vertical(show, HorizontalAlignment::Center);
+								ifstream in(questions[g]);
+								Question temp;
+								getline(in, temp.question);
+								in >> temp.correct;
+								{
+									string trash;
+									getline(in, trash);
+									while (getline(in,trash))
+									{
+										temp.answers.push_back(trash);
+									}
+								}
+								in.close();
+								while (c < 5)
+								{
+									system("cls");
+									gotoxy(50, 8);
+									cout << temp.question << endl;
+									gotoxy(50, 9);
+									cout << "Correct answer: " << temp.correct + 1 << endl;
+									int m = 10;
+									for_each(temp.answers.begin(), temp.answers.end(), [&m](string& answer) {gotoxy(50, m++); cout << answer << endl; });
+									c = Menu::select_vertical({"Change question","Change correct answer","Change answer","Add answer","Delete answer","Exit"}, HorizontalAlignment::Left, 16);
+									switch (c)
+									{
+									case 0:
+										system("cls");
+										gotoxy(50, 10);
+										cout << "New question: ";
+										getline(cin, temp.question);
+										break;
+									case 1:
+										while (true)
+										{
+											system("cls");
+											m = 10;
+											for_each(temp.answers.begin(), temp.answers.end(), [&m](string& answer) {gotoxy(50, m++); cout << answer << endl; });
+											gotoxy(50, m);
+											cout << "Correct answer: ";
+											cin >> temp.correct;
+											--temp.correct;
+											if (temp.correct >= 0 && temp.correct < temp.answers.size())
+											{
+												break;
+											}
+											cout << "Incorrect index" << endl;
+											system("pause");
+										}
+										break;
+									case 2:
+									{
+									system("cls");
+									m = 10;
+									int ind = 1;
+									for_each(temp.answers.begin(), temp.answers.end(), [&](string& answer) {gotoxy(50, m++); cout << ind++<<".\t" << answer << endl; });
+									gotoxy(50, m++);
+									cout << "Answer to change: ";
+									cin >> ind;
+									if (--ind >= 0 && ind < temp.answers.size())
+									{
+										string newAnswer;
+										gotoxy(50, m++);
+										cout << "New answer: ";
+										cin.ignore();
+										getline(cin, newAnswer);
+										temp.answers[ind] = newAnswer;
+										gotoxy(50, m);
+										cout << "Succesfully changed" << endl;
+									}
+									else
+									{
+										gotoxy(50, m);
+										cout << "Inccorrect index" << endl;
+									}
+									system("pause"); }
+										break;
+									case 3:
+									{
+										system("cls");
+										gotoxy(50, 10);
+										cout << "New answer: ";
+										string newAnswer;
+										getline(cin, newAnswer);
+										temp.answers.push_back(newAnswer);
+									}
+									    break;
+									case 4:
+									{
+										system("cls");
+										m = 10;
+										int ind = 1;
+										for_each(temp.answers.begin(), temp.answers.end(), [&](string& answer) {gotoxy(50, m++); cout << ind++ << ".\t" << answer << endl; });
+										gotoxy(50, m++);
+										cout << "Answer to delete: ";
+										cin >> ind;
+										if (--ind >= 0 && ind < temp.answers.size())
+										{
+											temp.answers.erase(temp.answers.begin() + ind);
+											gotoxy(50, m++);
+											cout << "Successfully deleted" << endl;
+										}
+										else
+										{
+											gotoxy(50, m++);
+											cout << "Invalid index" << endl;
+										}
+										system("pause");
+									}
+										break;
+									default:
+										break;
+									}
+								}
+								ofstream out(questions[g]);
+								out << temp.question << "\n";
+								out << temp.correct << "\n";
+								for_each(temp.answers.begin(), temp.answers.end(), [&](string& s) {out << s << "\n"; });
+								out.close();
+							}
+								break;
+							case 2:
+							{
+
+								vector<string> questions;
+								for (const auto& a : fs::directory_iterator(path))
+								{
+									questions.push_back(a.path().u8string());
+								}
+								vector<string> show(questions);
+								for_each(show.begin(), show.end(), [](string& str) {str.erase(str.begin(),str.begin()+ str.find_last_of("\\") + 1); });
+								for_each(show.begin(), show.end(), [](string& str) {str.erase(str.begin() + str.find_first_of("."),str.end()); });
+								c = Menu::select_vertical(show, HorizontalAlignment::Center);
+								ifstream in(questions[c]);
+								string temp;
+								system("cls");
+								while (getline(in,temp))
+								{
+									cout << temp << endl;
+								}
+								system("pause");
+							}
+								break;
+							case 3:
+							{
+								ifstream in;
+								string quest;
+								int ind = 0;
+								string last;
+								for (const auto a : fs::directory_iterator(path))
+								{
+									last = a.path().u8string();
+									in.open(a.path());
+									getline(in, quest);
+									cout << ++ind <<".  " << quest << endl;
+									in.close();
+								}
+								int number;
+								cout << "Number of the question you want to delete: ";
+								cin >> number;
+								if (fs::exists(path + to_string(number) + ".txt"))
+								{
+									fs::remove(path + to_string(number) + ".txt");
+									cout << "Succesfully deleted" << endl;
+									while (fs::exists(path + to_string(number + 1) + ".txt"))
+									{
+										fs::rename(path + to_string(number + 1) + ".txt", path + to_string(number++) + ".txt");
+									}
+								}
+								else
+								{
+									cout << "No such number exists" << endl;
+								}
+								cin.ignore();
+								system("pause");
+							}
+							   break;
+							default:
+								break;
+							}
+						}
+
 					}
 						break;
 					case 4:
