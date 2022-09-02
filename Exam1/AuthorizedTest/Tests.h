@@ -130,7 +130,7 @@ public:
 		out << "Time spent: " << elapsed_seconds.count() << " s" << endl;
 		out << "Finished at: " <<  std::ctime(&end_time);
 		out << login << endl;
-		out << "Correct amswers: " << correct << " / " << test.size() << endl;
+		out << "Correct answers: " << percent << " %" << endl;
 		out << "-------------------------------------" << endl;
 		out.close();
 		system("pause");

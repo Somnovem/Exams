@@ -2,20 +2,35 @@ Time spent: 8.51039
 Finished at: Thu Sep  1 19:07:06 2022
 
 admin
-Correct amswers: 4 / 4
+Correct answers: 100 %
 -------------------------------------
 Time spent: 8.2699 s
 Finished at: Thu Sep  1 19:11:30 2022
 admin
-Correct amswers: 3 / 4
+Correct answers: 75 %
 -------------------------------------
 Time spent: 8.47808 s
 Finished at: Thu Sep  1 20:08:03 2022
 admin
-Correct amswers: 3 / 4
+Correct answers: 75 %
 -------------------------------------
 Time spent: 3.705 s
 Finished at: Thu Sep  1 20:08:18 2022
 admin
-Correct amswers: 2 / 4
+Correct answers: 50 %
+-------------------------------------
+Time spent: 8.19636 s
+Finished at: Thu Sep  1 21:35:51 2022
+admin
+Correct answers: 0 %
+-------------------------------------
+Time spent: 8.44577 s
+Finished at: Fri Sep  2 21:49:02 2022
+Artagan
+Correct answers: 100 %
+-------------------------------------
+Time spent: 10.7888 s
+Finished at: Fri Sep  2 22:03:03 2022
+Artagan
+Correct answers: 50 %
 -------------------------------------

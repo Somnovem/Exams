@@ -16,7 +16,289 @@ public:
 	Guest(const string path) : User(path) {}
 	virtual void menu() noexcept override
 	{
-		
+		system("cls");
+		auto chooseDirectory = []()->string
+		{
+			while (true)
+			{
+				vector<string> categories;
+				string path = "Data\\Tests\\";
+				for (const auto& a : fs::directory_iterator(path))
+				{
+					categories.push_back(a.path().u8string());
+				}
+				if (categories.size() == 0)
+				{
+					gotoxy(20, 14);
+					cout << "No records" << endl;
+					continue;
+				}
+				vector<string> show = categories;
+				for_each(show.begin(), show.end(), [](string& s) {s.erase(s.begin(), s.begin() + s.find_last_of("\\") + 1); });
+				int c = Menu::select_vertical(show, HorizontalAlignment::Center, 10);
+				path = categories[c];
+				path += "\\";
+				return path;
+			}
+		};
+		auto chooseTest = [&]()->string
+		{
+			while (true)
+			{
+				vector<string> categories;
+				vector<string> show = categories;
+				string path = chooseDirectory();
+				for (const auto& a : fs::directory_iterator(path))
+				{
+					categories.push_back(a.path().u8string());
+				}
+				if (categories.size() == 0)
+				{
+					gotoxy(20, 14);
+					cout << "No records" << endl;
+					continue;
+				}
+				show = categories;
+				for_each(show.begin(), show.end(), [](string& s) {s.erase(s.begin(), s.begin() + s.find_last_of("\\") + 1); });
+				int c = Menu::select_vertical(show, HorizontalAlignment::Center, 10);
+				path = categories[c];
+				return path;
+			}
+		};
+		int c = 0;
+		while (c < 3)
+		{
+
+			system("cls");
+			c = Menu::select_vertical({"Test","View personal stats","Change password","Exit"}, HorizontalAlignment::Left, 18);
+			switch (c)
+			{
+			case 0:
+			{
+				string path = chooseTest();
+				path += "\\";
+				Test test;
+				test.constructTest(path);
+				path.pop_back();
+				test.play(path, this->path);
+			}
+				break;
+			case 1:
+			{
+				while (c < 2)
+				{
+					system("cls");
+					c = Menu::select_vertical({ "View info in test","View info in all tests","Exit" }, HorizontalAlignment::Center, 15);
+					switch (c)
+					{
+					case 0:
+					{
+						string path = chooseTest(); 
+						string temp;
+						temp.assign(path.begin() + path.find_last_of("\\")+ 1,path.end());
+						path = "Data\\Statistics\\" + temp + ".txt";
+						system("cls");
+						string login;
+						login.assign(this->path.begin() + this->path.find_last_of("\\") + 1, this->path.begin() + this->path.find_last_of("."));
+						ifstream in;
+						string holder;
+						temp.clear();
+						in.open(path);
+						while (getline(in, temp))
+						{
+							holder += temp;
+							holder += '\n';
+						}
+						in.close();
+						int m = 0;
+						while (true)
+						{
+							if (holder.find(login, m) != string::npos)
+							{
+								m = holder.find(login, m);
+								while (holder[m] != '-')
+								{
+									m--; 
+								}
+								++m;
+								while (holder[m] != '-')
+								{
+									cout << holder[m];
+									++m;
+								}
+								cout << "----------------------------" << endl;
+								continue;
+							}
+						    break;
+						}
+						system("pause");
+					}
+						break;
+					case 1:
+					{
+						system("cls");
+						gotoxy(40, 14);
+						string login;
+						login.assign(this->path.begin() + this->path.find_last_of("\\") + 1, this->path.begin() + this->path.find_last_of("."));
+						system("cls");
+						vector<string> tests;
+						string path = "Data\\Statistics\\";
+					    for (const auto& a : fs::directory_iterator(path))
+						{
+							tests.push_back(a.path().u8string());
+						}
+						ifstream in;
+						string holder;
+						string temp;
+						string testName;
+						for_each(tests.begin(), tests.end(), [&in, &holder, &temp, &login,&testName](string& test)
+						{
+							testName.assign(test.begin() + test.find_last_of("\\") + 1, test.begin() + test.find_last_of("."));
+							holder.clear();
+							in.open(test);
+							while (getline(in, temp))
+							{
+								holder += temp;
+								holder += '\n';
+							}
+							int m = 0;
+							temp.assign(test.begin() + test.find_last_of("\\") + 1, test.begin() + test.find_last_of("."));;
+							while (true)
+							{
+								if (holder.find(login, m) != string::npos)
+								{
+									cout << "Test: " << testName;
+									m = holder.find(login, m);
+									while (holder[m] != '-')
+									{
+										m--;
+									}
+									++m;
+									while (holder[m] != '-')
+									{
+										cout << holder[m];
+										++m;
+									}
+									cout << "----------------------------" << endl;
+									continue;
+								}
+								break;
+							}
+							in.close();
+						});
+						system("pause");
+					}
+						break;
+					default:
+						break;
+					}
+				}
+			}
+				break;
+			case 2:
+			{
+				ifstream in(this->path);
+				string password;
+				getline(in, password);
+				in.close();
+				gotoxy(25, 15);
+				string guess;
+				int attempts = 3;
+				while (attempts > 0)
+				{
+					guess.clear();
+					system("cls");
+					cout << "Old password: ";
+					while (true)
+					{
+						char a = _getch();
+						if (a == 13)
+						{
+							break;
+						}
+						else if (a == '\b')
+						{
+							if (guess.size() > 0)
+							{
+								guess.pop_back();
+								cout << "\b \b";
+							}
+						}
+						if ((a > 47 && a < 58) || (a > 64 && a < 91) || (a > 96 && a < 123))  //ASCii code for integer and alphabet
+						{
+							guess += a;
+							printf("*");
+						}
+					}
+					cout << endl;
+					if (md5(guess) == password)
+					{
+						break;
+					}
+					cout << "Incorrect password" << endl;
+					system("pause");
+					attempts--;
+				}
+				system("cls");
+				if (attempts <= 0)
+				{
+					gotoxy(25, 16);
+					cout << "Too many incorrect attempts" << endl;
+					system("pause");
+					break;
+				}
+				attempts = 2;
+				while (attempts < 3)
+				{
+					system("cls");
+					gotoxy(25, 15);
+					cout << "Old password: ";
+					for (size_t i = 0; i < guess.size(); i++)
+					{
+						cout << "*";
+					}
+					cout << endl;
+					gotoxy(25, 16);
+					cout << "New password: ";
+					password.clear();
+					while (true)
+					{
+						char a = _getch();
+						if (a == 13)
+						{
+							break;
+						}
+						else if (a == '\b')
+						{
+							if (password.size() > 0)
+							{
+								password.pop_back();
+								cout << "\b \b";
+							}
+						}
+						if ((a > 47 && a < 58) || (a > 64 && a < 91) || (a > 96 && a < 123))  //ASCii code for integer and alphabet
+						{
+							password += a;
+							printf("*");
+						}
+					}
+					if (password.size() < 12 && password.size() > 24)
+					{
+						cout << "Incorrect size of password" << endl;
+						attempts--;
+						continue;
+					}
+					break;
+				}
+				ofstream out(this->path);
+				out << md5(password) << endl;
+				out.close();
+			}
+				break;
+			default:
+				break;
+			}
+		}
 	}
 };
 
@@ -31,6 +313,8 @@ public:
 		while (c  <4)
 		{
 			system("cls");
+			gotoxy(37, 2);
+			cout << "Admin's workspace" << endl;
 			 c = Menu::select_vertical({"Change own credentials","Work with users","Statistics","Work with tests","Exit"}, HorizontalAlignment::Left, 18);
 			switch (c)
 			{
@@ -85,10 +369,10 @@ public:
 				break;
 			case 1:
 			{
-				while (c < 3)
+				while (c < 2)
 				{
 					system("cls");
-					c = Menu::select_vertical({ "Add user","Delete user","Change user","Exit" }, HorizontalAlignment::Center);
+					c = Menu::select_vertical({ "Add user","Delete user","Exit" }, HorizontalAlignment::Center);
 					switch (c)
 					{
 					case 0:
@@ -130,36 +414,32 @@ public:
 						break;
 					case 1:
 					{
-						string login;
-						cout << "Login of the user you want to delete: ";
-						getline(cin, login);
-						if (fs::exists("Credentials\\" + login + ".txt"))
+						string path = "Credentials\\";
+						vector<string> logins;
+						for (const auto& a: fs::directory_iterator(path))
 						{
-							fs::remove("Credentials\\" + login + ".txt");
+							logins.push_back(a.path().u8string());
+						}
+						if (logins.size() > 0)
+						{
+							vector<string> show(logins);
+							for_each(show.begin(), show.end(), [](string& s) {s.erase(s.begin(), s.begin() + s.find_last_of("\\") + 1); s.erase(s.begin() + s.find_last_of("."), s.end()); });
+							gotoxy(33, 8);
+							cout << "Choose user to delete: ";
+							c = Menu::select_vertical(show, HorizontalAlignment::Center, 9);
+							fs::remove(logins[c]);
+							gotoxy(33, 10);
 							cout << "Successfully deleted" << endl;
 						}
 						else
 						{
-							cout << "No such login exists" << endl;
+							system("cls");
+							gotoxy(33, 10);
+							cout << "No recorded logins" << endl;
 						}
 						system("pause");
 					}
 					 break;
-					case 2:
-					{
-						string oldLogin;
-						string newLogin;
-						cout << "Login you want to change: ";
-						getline(cin, oldLogin);
-						if (fs::exists("Credentials\\" + oldLogin + ".txt"))
-						{
-							cout << "New login: ";
-							getline(cin, newLogin);
-							fs::rename("Credentials\\" + oldLogin + ".txt", "Credentials\\" + newLogin + ".txt");
-
-						}
-					}
-						break;
 					default:
 						break;
 					}
@@ -231,13 +511,16 @@ public:
 						ifstream in;
 						string holder;
 						string temp;
-						for_each(tests.begin(), tests.end(), [&in,&holder,&temp,&login](string& test)
+						string testName;
+						for_each(tests.begin(), tests.end(), [&in,&holder,&temp,&login,&testName](string& test)
 							{
+								testName.assign(test.begin() + test.find_last_of("\\") + 1, test.begin() + test.find_last_of("."));
 								holder.clear();
 								in.open(test);
 								while (getline(in,temp))
 								{
 									holder += temp;
+									holder += '\n';
 								}
 								int m = 0;
 								temp.assign(test.begin() + test.find_last_of("\\") + 1, test.begin() + test.find_last_of("."));;
@@ -245,6 +528,7 @@ public:
 								{
 									if (holder.find(login, m) != string::npos)
 									{
+										cout << "Test: " << testName;
 										m = holder.find(login, m);
 										m += login.size();
 										cout << temp << endl;
@@ -258,6 +542,7 @@ public:
 									}
 									break;
 								}
+								in.close();
 							});
 					}
 					system("pause");
@@ -273,10 +558,11 @@ public:
 					}
 					int entries = 0;
 					double timeOverall = 0;
+					int correctness = 0;
 					ifstream in;
 					string temp;
 					for_each(tests.begin(), tests.end(), [&](string& s)
-						{
+					{
 							in.open(s);
 							while (getline(in,temp))
 							{
@@ -294,9 +580,15 @@ public:
 									}
 									timeOverall += stod(time);
 								}
-								else
+								else if(temp._Starts_with("Correct answers: "))
 								{
-
+									int ind = strlen("Correct answers: ");
+									string percent;
+									while (temp[ind] != ' ')
+									{
+										percent += temp[ind++];
+									}
+									correctness += stoi(percent);
 								}
 							}
 							in.close();
@@ -306,7 +598,10 @@ public:
 					cout << "Entries: " << entries << endl;
 					gotoxy(30, m++);
 					cout << "Time spent overall: " << timeOverall << endl;
+					gotoxy(30, m++);
+					cout << "Average grade: " << ((double)correctness / double(100 * entries)) * 12 << endl;
 					system("pause");
+
 				}
 				break;
 				default:
@@ -316,7 +611,6 @@ public:
 				break;
 			case 3:
 			{
-				int c = 0;
 				auto chooseDirectory = []()->string
 				{
 					while (true)
@@ -341,6 +635,71 @@ public:
 						return path;
 					}
 					
+				};
+				auto chooseAddDirectory = []() ->string
+				{
+					vector<string> categories;
+					string path = "Data\\Tests\\";
+					for (const auto& a : fs::directory_iterator(path))
+					{
+						categories.push_back(a.path().u8string());
+					}
+					vector<string> show = categories;
+					show.insert(show.begin(), "Add new");
+					for_each(show.begin() + 1, show.end(), [](string& s) {s.erase(s.begin(), s.begin() + s.find_last_of("\\") + 1); });
+					int c = Menu::select_vertical(show, HorizontalAlignment::Center, 10);
+					if (c != 0)
+					{
+						path = categories[c-1];
+					}
+					else
+					{
+						while (true)
+						{
+							system("cls");
+							{
+								int m = 2;
+								string path = "Data\\Tests\\";
+								vector<string> directories;
+								for (const auto& a : fs::directory_iterator(path))
+								{
+									directories.push_back(a.path().u8string());
+								}
+								for_each(directories.begin(), directories.end(), [](string& s)
+									{
+										s.erase(s.begin(), s.begin() + s.find_last_of("\\") + 1);
+									});
+								gotoxy(2, m++);
+								cout << "Already exist: " << endl;
+								for_each(directories.begin(), directories.end(), [&m](string& s)
+									{
+										gotoxy(2, m++);
+										cout << s << endl;
+									});
+							}
+							string newDirectory;
+							gotoxy(20, 13);
+							cout << "Name of the new category: ";
+							getline(cin, newDirectory);
+							gotoxy(20, 14);
+							if (!fs::exists("Data\\Tests\\" + newDirectory))
+							{
+								fs::create_directory("Data\\Tests\\" + newDirectory);
+								path = "Data\\Tests\\" + newDirectory;
+								cout << "Succesfully created" << endl;
+								system("pause");
+								break;
+							}
+							else
+							{
+								cout << "Such category already exists" << endl;
+								system("pause");
+							}
+						}
+						
+					}
+					path += "\\";
+					return path;
 				};
 				auto chooseTest = [&]()->string
 				{
@@ -373,7 +732,28 @@ public:
 					switch (c)
 					{
 					case 0:
-					{
+					{ 
+						system("cls");
+						{
+							int m = 2;
+							string path = "Data\\Tests\\";
+							vector<string> directories;
+							for (const auto& a : fs::directory_iterator(path))
+							{
+								directories.push_back(a.path().u8string());
+							}
+							for_each(directories.begin(), directories.end(), [](string& s)
+								{
+									s.erase(s.begin(), s.begin() + s.find_last_of("\\") + 1);
+								});
+							gotoxy(2, m++);
+							cout << "Already exist: " << endl;
+							for_each(directories.begin(), directories.end(), [&m](string& s)
+								{
+									gotoxy(2, m++);
+									cout << s << endl;
+								});
+						}
 						string newDirectory;
 						gotoxy(20, 13);
 						cout << "Name of the new category: ";
@@ -393,12 +773,34 @@ public:
 						break;
 					case 1:
 					{
-						string path = chooseDirectory();
+						system("cls");
+						string path = chooseAddDirectory();
+						system("cls");
 						string newTest;
 						gotoxy(20, 13);
+						{
+							int m = 2;
+							vector<string> directories;
+							for (const auto& a : fs::directory_iterator(path))
+							{
+								directories.push_back(a.path().u8string());
+							}
+							for_each(directories.begin(), directories.end(), [](string& s)
+								{
+									s.erase(s.begin(), s.begin() + s.find_last_of("\\") + 1);
+								});
+							gotoxy(2, m++);
+							cout << "Already exist: " << endl;
+							for_each(directories.begin(), directories.end(), [&m](string& s)
+								{
+									gotoxy(2, m++);
+									cout << s << endl;
+								});
+						}
+						gotoxy(20, 14);
 						cout << "Name of the new test: ";
 						getline(cin, newTest);
-						gotoxy(20, 14);
+						gotoxy(20, 15);
 						if (!fs::exists(path + newTest))
 						{
 							fs::create_directory(path + newTest);
