@@ -66,14 +66,43 @@ public:
 			}
 		};
 		int c = 0;
-		while (c < 3)
+		while (c < 4)
 		{
-
+			c = 0;
 			system("cls");
-			c = Menu::select_vertical({"Test","View personal stats","Change password","Exit"}, HorizontalAlignment::Left, 18);
+			vector<string> options;
+			string login;
+			login.assign(this->path.begin() + this->path.find_last_of("\\") + 1, this->path.begin() + this->path.find_last_of("."));
+			if (fs::exists("Data\\Unfinished Tests\\" + login + ".txt"))
+			{
+				options.push_back("Finish unfinished test");
+			}
+			else
+			{
+				c++;
+			}
+			options.push_back("Test");
+			options.push_back("View personal stats");
+			options.push_back("Change password");
+			options.push_back("Exit");
+			c += Menu::select_vertical(options, HorizontalAlignment::Left, 18);
 			switch (c)
 			{
 			case 0:
+			{
+				ifstream in("Data\\Unfinished Tests\\" + login + ".txt");
+				string path;
+				string answers;
+				getline(in, path);
+				getline(in, answers);
+				in.close();
+				fs::remove("Data\\Unfinished Tests\\" + login + ".txt");
+				Test test;
+				test.constructTest(path);
+				test.fill_and_play(answers,path,this->path);
+			}
+				break;
+			case 1:
 			{
 				string path = chooseTest();
 				path += "\\";
@@ -83,7 +112,7 @@ public:
 				test.play(path, this->path);
 			}
 				break;
-			case 1:
+			case 2:
 			{
 				while (c < 2)
 				{
@@ -93,9 +122,9 @@ public:
 					{
 					case 0:
 					{
-						string path = chooseTest(); 
+						string path = chooseTest();
 						string temp;
-						temp.assign(path.begin() + path.find_last_of("\\")+ 1,path.end());
+						temp.assign(path.begin() + path.find_last_of("\\") + 1, path.end());
 						path = "Data\\Statistics\\" + temp + ".txt";
 						system("cls");
 						string login;
@@ -118,7 +147,7 @@ public:
 								m = holder.find(login, m);
 								while (holder[m] != '-')
 								{
-									m--; 
+									m--;
 								}
 								++m;
 								while (holder[m] != '-')
@@ -129,11 +158,11 @@ public:
 								cout << "----------------------------" << endl;
 								continue;
 							}
-						    break;
+							break;
 						}
 						system("pause");
 					}
-						break;
+					break;
 					case 1:
 					{
 						system("cls");
@@ -143,7 +172,7 @@ public:
 						system("cls");
 						vector<string> tests;
 						string path = "Data\\Statistics\\";
-					    for (const auto& a : fs::directory_iterator(path))
+						for (const auto& a : fs::directory_iterator(path))
 						{
 							tests.push_back(a.path().u8string());
 						}
@@ -151,51 +180,51 @@ public:
 						string holder;
 						string temp;
 						string testName;
-						for_each(tests.begin(), tests.end(), [&in, &holder, &temp, &login,&testName](string& test)
-						{
-							testName.assign(test.begin() + test.find_last_of("\\") + 1, test.begin() + test.find_last_of("."));
-							holder.clear();
-							in.open(test);
-							while (getline(in, temp))
+						for_each(tests.begin(), tests.end(), [&in, &holder, &temp, &login, &testName](string& test)
 							{
-								holder += temp;
-								holder += '\n';
-							}
-							int m = 0;
-							temp.assign(test.begin() + test.find_last_of("\\") + 1, test.begin() + test.find_last_of("."));;
-							while (true)
-							{
-								if (holder.find(login, m) != string::npos)
+								testName.assign(test.begin() + test.find_last_of("\\") + 1, test.begin() + test.find_last_of("."));
+								holder.clear();
+								in.open(test);
+								while (getline(in, temp))
 								{
-									cout << "Test: " << testName;
-									m = holder.find(login, m);
-									while (holder[m] != '-')
-									{
-										m--;
-									}
-									++m;
-									while (holder[m] != '-')
-									{
-										cout << holder[m];
-										++m;
-									}
-									cout << "----------------------------" << endl;
-									continue;
+									holder += temp;
+									holder += '\n';
 								}
-								break;
-							}
-							in.close();
-						});
+								int m = 0;
+								temp.assign(test.begin() + test.find_last_of("\\") + 1, test.begin() + test.find_last_of("."));;
+								while (true)
+								{
+									if (holder.find(login, m) != string::npos)
+									{
+										cout << "Test: " << testName;
+										m = holder.find(login, m);
+										while (holder[m] != '-')
+										{
+											m--;
+										}
+										++m;
+										while (holder[m] != '-')
+										{
+											cout << holder[m];
+											++m;
+										}
+										cout << "----------------------------" << endl;
+										continue;
+									}
+									break;
+								}
+								in.close();
+							});
 						system("pause");
 					}
-						break;
+					break;
 					default:
 						break;
 					}
 				}
 			}
-				break;
-			case 2:
+			  break;
+			case 3:
 			{
 				ifstream in(this->path);
 				string password;
@@ -292,8 +321,7 @@ public:
 				}
 				ofstream out(this->path);
 				out << md5(password) << endl;
-				out.close();
-			}
+				out.close(); }
 				break;
 			default:
 				break;
