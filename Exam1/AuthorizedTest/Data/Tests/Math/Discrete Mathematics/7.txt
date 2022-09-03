@@ -1,0 +1,6 @@
+If set contains 3 elements,number of subsets is?
+3
+6
+3
+12
+8

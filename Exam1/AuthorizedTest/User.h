@@ -1,6 +1,7 @@
 #pragma once
 #include "Tests.h"
 #include "md5.h"
+#include <numeric>
 class User abstract
 {
 protected:
@@ -221,6 +222,7 @@ public:
 					default:
 						break;
 					}
+					c = 0;
 				}
 			}
 			  break;
@@ -334,7 +336,6 @@ class Admin : public User
 {
 public:
 	Admin(const string path) : User(path) {}
-	
 	virtual void menu()noexcept override
 	{
 		int c = 0;
@@ -393,7 +394,9 @@ public:
 					default:
 						break;
 					}
+
 				}
+				c = 0;
 				break;
 			case 1:
 			{
@@ -471,170 +474,177 @@ public:
 					default:
 						break;
 					}
+					
 				}
+				c = 0;
 			}
 				break;
 			case 2:
 			{
-				system("cls");
-				c = Menu::select_vertical({"Stats by test","Stats by user","Stats overall","Exit"}, HorizontalAlignment::Center, 10);
-				switch (c)
-				{
-				case 0:
-				{
-					vector<string> tests;
-					string path = "Data\\Statistics\\";
-					for (const auto& a : fs::directory_iterator(path))
-					{
-						tests.push_back(a.path().u8string());
-					}
-					if (tests.size() == 0)
-					{
-						gotoxy(30, 15);
-						cout << "No records" << endl;
-						system("pause");
-						break;
-					}
-					vector<string> show(tests);
-					for_each(show.begin(), show.end(), [](string& s)
-					{
-							s.erase(s.begin(), s.begin() + s.find_last_of("\\") + 1);
-							s.erase(s.begin() + s.find_last_of(".") ,s.end());
-					});
-					c = Menu::select_vertical(show, HorizontalAlignment::Center, 10);
-					path = tests[c];
-					ifstream in;
-					string temp;
-					in.open(path);
-					while (getline(in,temp))
-					{
-						cout << temp << endl;
-					}
-					in.close();
-					system("pause");
-					break;
-				}
-					break;
-				case 1:
+				while (c < 3)
 				{
 					system("cls");
-					gotoxy(40, 14);
-					string login;
-					cout << "Login of the user whose stats to show: ";
-					getline(cin, login);
-					if (!fs::exists("Credentials\\" + login + ".txt") && !fs::exists("Data\\Admins\\" + login + ".txt"))
+					c = Menu::select_vertical({ "Stats by test","Stats by user","Stats overall","Exit" }, HorizontalAlignment::Center, 10);
+					switch (c)
 					{
-						gotoxy(40, 15);
-						cout << "No such login exists" << endl;
-					}
-					else
+					case 0:
 					{
-						system("cls");
 						vector<string> tests;
 						string path = "Data\\Statistics\\";
 						for (const auto& a : fs::directory_iterator(path))
 						{
 							tests.push_back(a.path().u8string());
 						}
-						ifstream in;
-						string holder;
-						string temp;
-						string testName;
-						for_each(tests.begin(), tests.end(), [&in,&holder,&temp,&login,&testName](string& test)
+						if (tests.size() == 0)
+						{
+							gotoxy(30, 15);
+							cout << "No records" << endl;
+							system("pause");
+							break;
+						}
+						vector<string> show(tests);
+						for_each(show.begin(), show.end(), [](string& s)
 							{
-								testName.assign(test.begin() + test.find_last_of("\\") + 1, test.begin() + test.find_last_of("."));
-								holder.clear();
-								in.open(test);
-								while (getline(in,temp))
+								s.erase(s.begin(), s.begin() + s.find_last_of("\\") + 1);
+								s.erase(s.begin() + s.find_last_of("."), s.end());
+							});
+						c = Menu::select_vertical(show, HorizontalAlignment::Center, 10);
+						path = tests[c];
+						ifstream in;
+						string temp;
+						in.open(path);
+						while (getline(in, temp))
+						{
+							cout << temp << endl;
+						}
+						in.close();
+						system("pause");
+						break;
+					}
+					break;
+					case 1:
+					{
+						system("cls");
+						gotoxy(40, 14);
+						string login;
+						cout << "Login of the user whose stats to show: ";
+						getline(cin, login);
+						if (!fs::exists("Credentials\\" + login + ".txt") && !fs::exists("Data\\Admins\\" + login + ".txt"))
+						{
+							gotoxy(40, 15);
+							cout << "No such login exists" << endl;
+						}
+						else
+						{
+							system("cls");
+							vector<string> tests;
+							string path = "Data\\Statistics\\";
+							for (const auto& a : fs::directory_iterator(path))
+							{
+								tests.push_back(a.path().u8string());
+							}
+							ifstream in;
+							string holder;
+							string temp;
+							string testName;
+							for_each(tests.begin(), tests.end(), [&in, &holder, &temp, &login, &testName](string& test)
 								{
-									holder += temp;
-									holder += '\n';
-								}
-								int m = 0;
-								temp.assign(test.begin() + test.find_last_of("\\") + 1, test.begin() + test.find_last_of("."));;
-								while (true)
-								{
-									if (holder.find(login, m) != string::npos)
+									testName.assign(test.begin() + test.find_last_of("\\") + 1, test.begin() + test.find_last_of("."));
+									holder.clear();
+									in.open(test);
+									while (getline(in, temp))
 									{
-										cout << "Test: " << testName;
-										m = holder.find(login, m);
-										m += login.size();
-										cout << temp << endl;
-										while (holder[m] != '-')
-										{
-											cout << holder[m++];
-										} 
-										cout << endl;
-										cout << "----------------------------" << endl;
-										continue;
+										holder += temp;
+										holder += '\n';
 									}
-									break;
+									int m = 0;
+									temp.assign(test.begin() + test.find_last_of("\\") + 1, test.begin() + test.find_last_of("."));;
+									while (true)
+									{
+										if (holder.find(login, m) != string::npos)
+										{
+											cout << "Test: " << testName;
+											m = holder.find(login, m);
+											m += login.size();
+											cout << temp << endl;
+											while (holder[m] != '-')
+											{
+												cout << holder[m++];
+											}
+											cout << endl;
+											cout << "----------------------------" << endl;
+											continue;
+										}
+										break;
+									}
+									in.close();
+								});
+						}
+						system("pause");
+					}
+					break;
+					case 2:
+					{
+						system("cls");
+						vector<string> tests;
+						for (const auto& a : fs::directory_iterator("Data\\Statistics"))
+						{
+							tests.push_back(a.path().u8string());
+						}
+						int entries = 0;
+						double timeOverall = 0;
+						int correctness = 0;
+						ifstream in;
+						string temp;
+						for_each(tests.begin(), tests.end(), [&](string& s)
+							{
+								in.open(s);
+								while (getline(in, temp))
+								{
+									if (temp._Starts_with("--------"))
+									{
+										entries++;
+									}
+									else if (temp._Starts_with("Time spent:"))
+									{
+										int ind = 12;
+										string time;
+										while (temp[ind] != '\0')
+										{
+											time += temp[ind++];
+										}
+										timeOverall += stod(time);
+									}
+									else if (temp._Starts_with("Correct answers: "))
+									{
+										int ind = strlen("Correct answers: ");
+										string percent;
+										while (temp[ind] != ' ')
+										{
+											percent += temp[ind++];
+										}
+										correctness += stoi(percent);
+									}
 								}
 								in.close();
 							});
-					}
-					system("pause");
-				}
-					break;
-				case 2:
-				{
-					system("cls");
-					vector<string> tests;
-					for (const auto& a : fs::directory_iterator("Data\\Statistics"))
-					{
-						tests.push_back(a.path().u8string());
-					}
-					int entries = 0;
-					double timeOverall = 0;
-					int correctness = 0;
-					ifstream in;
-					string temp;
-					for_each(tests.begin(), tests.end(), [&](string& s)
-					{
-							in.open(s);
-							while (getline(in,temp))
-							{
-								if (temp._Starts_with("--------"))
-								{
-									entries++;
-								}
-								else if (temp._Starts_with("Time spent:"))
-								{
-									int ind = 12;
-									string time;
-									while (temp[ind] != '\0')
-									{
-										time += temp[ind++];
-									}
-									timeOverall += stod(time);
-								}
-								else if(temp._Starts_with("Correct answers: "))
-								{
-									int ind = strlen("Correct answers: ");
-									string percent;
-									while (temp[ind] != ' ')
-									{
-										percent += temp[ind++];
-									}
-									correctness += stoi(percent);
-								}
-							}
-							in.close();
-						});
-					int m = 13;
-					gotoxy(30, m++);
-					cout << "Entries: " << entries << endl;
-					gotoxy(30, m++);
-					cout << "Time spent overall: " << timeOverall << endl;
-					gotoxy(30, m++);
-					cout << "Average grade: " << ((double)correctness / double(100 * entries)) * 12 << endl;
-					system("pause");
+						int m = 13;
+						gotoxy(30, m++);
+						cout << "Entries: " << entries << endl;
+						gotoxy(30, m++);
+						cout << "Time spent overall: " << timeOverall << endl;
+						gotoxy(30, m++);
+						cout << "Average grade: " << ((double)correctness / double(100 * entries)) * 12 << endl;
+						system("pause");
 
-				}
-				break;
-				default:
+					}
 					break;
+					default:
+						break;
+					}
+					
 				}
+				c = 0;
 			}
 				break;
 			case 3:
@@ -753,7 +763,7 @@ public:
 						return path;
 					}
 				};
-				while (c <= 5)
+				while (c < 6)
 				{
 					system("cls");
 					 c= Menu::select_vertical({ "Add category","Add test to category","Delete test from category","Change test","Delete category","Try test","Exit" }, HorizontalAlignment::Left, 18);
@@ -806,6 +816,7 @@ public:
 						system("cls");
 						string newTest;
 						gotoxy(20, 13);
+
 						{
 							int m = 2;
 							vector<string> directories;
@@ -825,6 +836,7 @@ public:
 									cout << s << endl;
 								});
 						}
+
 						gotoxy(20, 14);
 						cout << "Name of the new test: ";
 						getline(cin, newTest);
@@ -864,7 +876,7 @@ public:
 								Question temp;
 								{
 									int m = 10;
-									gotoxy(50, m++);
+									gotoxy(20, m++);
 									cout << "Question: ";
 									getline(cin, temp.question);
 									int ind = 1;
@@ -878,7 +890,7 @@ public:
 										for_each(temp.answers.begin(), temp.answers.end(), [&cur, &ind](string& s) {gotoxy(15, cur++); cout << ind++ << ".\t" << s << endl; });
 										if (temp.answers.size() < 2)
 										{
-											gotoxy(50, m);
+											gotoxy(20, m);
 											cout << "Answer: ";
 											string answer;
 											getline(cin, answer);
@@ -886,9 +898,9 @@ public:
 										}
 										else
 										{
-											gotoxy(30, 10);
+											gotoxy(30, 15);
 											cout << "Add another answer?" << endl;
-											c = Menu::select_vertical({ "Yes","No" }, HorizontalAlignment::Center);
+											c = Menu::select_vertical({ "Yes","No" }, HorizontalAlignment::Center,16);
 											switch (c)
 											{
 											case 0:
@@ -898,7 +910,7 @@ public:
 												gotoxy(15, cur++);
 												cout << temp.question << endl;
 												for_each(temp.answers.begin(), temp.answers.end(), [&cur, &ind](string& s) {gotoxy(15, cur++); cout << ind++ << ".\t" << s << endl; });
-												gotoxy(50, m++);
+												gotoxy(20, m++);
 												cout << "Answer: ";
 												string answer;
 												getline(cin, answer);
@@ -915,17 +927,29 @@ public:
 									system("cls");
 									m = 10;
 									ind = 1;
-									for_each(temp.answers.begin(), temp.answers.end(), [&m,&ind](string answer) {gotoxy(50, m++); cout << ind++ << ".\t" << answer << endl; });
-									gotoxy(50, m++);
+									for_each(temp.answers.begin(), temp.answers.end(), [&m,&ind](string answer) {gotoxy(25, m++); cout << ind++ << ".\t" << answer << endl; });
+									gotoxy(20, m++);
 									cout << "Index of the correct answer: ";
 									cin >> ind;
-									temp.correct = --ind;
+									if (isdigit(ind))
+									{
+										temp.correct = --ind;
+									}
+									else
+									{
+										temp.correct = 0;
+									}
 									cin.ignore();
 								}
 								string lastFile;
-								for (const auto& newQuestion : fs::directory_iterator(path))
 								{
-									lastFile = newQuestion.path().u8string();
+									vector<string> questions;
+									for (const auto& newQuestion : fs::directory_iterator(path))
+									{
+										questions.push_back(newQuestion.path().u8string());
+									}
+									sort(questions.begin(), questions.end(), [](string& s1, string& s2) {return std::accumulate(s1.begin(), s1.end(), 0) < std::accumulate(s2.begin(), s2.end(), 0); });
+									lastFile = questions.back();
 								}
 								string newFile;
 								newFile.assign(lastFile.begin() + lastFile.find_last_of("\\") + 1, lastFile.begin() + lastFile.find_last_of("."));
@@ -933,7 +957,16 @@ public:
 								size_t ind = lastFile.find_last_of("\\") + 1;
 								for (size_t i = 0; i < newFile.size(); i++)
 								{
-									lastFile[ind++] = newFile[i];
+									
+									if (i > 0)
+									{
+										lastFile.insert(lastFile.begin() + ind, newFile[i]);
+									}
+									else
+									{
+										lastFile[ind] = newFile[i];
+									}
+									++ind;
 								}
 								ofstream out(lastFile);
 								out << temp.question << "\n";
@@ -951,6 +984,7 @@ public:
 								{
 									questions.push_back(a.path().u8string());
 								}
+								sort(questions.begin(), questions.end(), [](string& s1, string& s2) {return std::accumulate(s1.begin(),s1.end(),0)< std::accumulate(s2.begin(),s2.end(),0); });
 								vector<string> show(questions);
 								for_each(show.begin(), show.end(), [](string& str) {str.erase(str.begin(), str.begin() + str.find_last_of("\\") + 1); });
 								for_each(show.begin(), show.end(), [](string& str) {str.erase(str.begin() + str.find_first_of("."), str.end()); });
@@ -971,18 +1005,18 @@ public:
 								while (c < 5)
 								{
 									system("cls");
-									gotoxy(50, 8);
+									gotoxy(25, 8);
 									cout << temp.question << endl;
-									gotoxy(50, 9);
+									gotoxy(25, 9);
 									cout << "Correct answer: " << temp.correct + 1 << endl;
 									int m = 10;
-									for_each(temp.answers.begin(), temp.answers.end(), [&m](string& answer) {gotoxy(50, m++); cout << answer << endl; });
+									for_each(temp.answers.begin(), temp.answers.end(), [&m](string& answer) {gotoxy(25, m++); cout << answer << endl; });
 									c = Menu::select_vertical({"Change question","Change correct answer","Change answer","Add answer","Delete answer","Exit"}, HorizontalAlignment::Left, 16);
 									switch (c)
 									{
 									case 0:
 										system("cls");
-										gotoxy(50, 10);
+										gotoxy(25, 10);
 										cout << "New question: ";
 										getline(cin, temp.question);
 										break;
@@ -991,10 +1025,11 @@ public:
 										{
 											system("cls");
 											m = 10;
-											for_each(temp.answers.begin(), temp.answers.end(), [&m](string& answer) {gotoxy(50, m++); cout << answer << endl; });
-											gotoxy(50, m);
+											for_each(temp.answers.begin(), temp.answers.end(), [&m](string& answer) {gotoxy(25, m++); cout << answer << endl; });
+											gotoxy(25, m);
 											cout << "Correct answer: ";
 											cin >> temp.correct;
+											cin.ignore();
 											--temp.correct;
 											if (temp.correct >= 0 && temp.correct < temp.answers.size())
 											{
@@ -1009,24 +1044,25 @@ public:
 									system("cls");
 									m = 10;
 									int ind = 1;
-									for_each(temp.answers.begin(), temp.answers.end(), [&](string& answer) {gotoxy(50, m++); cout << ind++<<".\t" << answer << endl; });
-									gotoxy(50, m++);
+									for_each(temp.answers.begin(), temp.answers.end(), [&](string& answer) {gotoxy(25, m++); cout << ind++<<".\t" << answer << endl; });
+									gotoxy(25, m++);
 									cout << "Answer to change: ";
 									cin >> ind;
+									cin.ignore();
 									if (--ind >= 0 && ind < temp.answers.size())
 									{
 										string newAnswer;
-										gotoxy(50, m++);
+										gotoxy(25, m++);
 										cout << "New answer: ";
 										cin.ignore();
 										getline(cin, newAnswer);
 										temp.answers[ind] = newAnswer;
-										gotoxy(50, m);
+										gotoxy(25, m);
 										cout << "Succesfully changed" << endl;
 									}
 									else
 									{
-										gotoxy(50, m);
+										gotoxy(25, m);
 										cout << "Inccorrect index" << endl;
 									}
 									system("pause"); }
@@ -1034,7 +1070,7 @@ public:
 									case 3:
 									{
 										system("cls");
-										gotoxy(50, 10);
+										gotoxy(25, 10);
 										cout << "New answer: ";
 										string newAnswer;
 										getline(cin, newAnswer);
@@ -1046,19 +1082,20 @@ public:
 										system("cls");
 										m = 10;
 										int ind = 1;
-										for_each(temp.answers.begin(), temp.answers.end(), [&](string& answer) {gotoxy(50, m++); cout << ind++ << ".\t" << answer << endl; });
-										gotoxy(50, m++);
+										for_each(temp.answers.begin(), temp.answers.end(), [&](string& answer) {gotoxy(25, m++); cout << ind++ << ".\t" << answer << endl; });
+										gotoxy(25, m++);
 										cout << "Answer to delete: ";
 										cin >> ind;
+										cin.ignore();
 										if (--ind >= 0 && ind < temp.answers.size())
 										{
 											temp.answers.erase(temp.answers.begin() + ind);
-											gotoxy(50, m++);
+											gotoxy(25, m++);
 											cout << "Successfully deleted" << endl;
 										}
 										else
 										{
-											gotoxy(50, m++);
+											gotoxy(25, m++);
 											cout << "Invalid index" << endl;
 										}
 										system("pause");
@@ -1083,6 +1120,7 @@ public:
 								{
 									questions.push_back(a.path().u8string());
 								}
+								sort(questions.begin(), questions.end(), [](string& s1, string& s2) {return std::accumulate(s1.begin(), s1.end(), 0) < std::accumulate(s2.begin(), s2.end(), 0); });
 								vector<string> show(questions);
 								for_each(show.begin(), show.end(), [](string& str) {str.erase(str.begin(),str.begin()+ str.find_last_of("\\") + 1); });
 								for_each(show.begin(), show.end(), [](string& str) {str.erase(str.begin() + str.find_first_of("."),str.end()); });
@@ -1103,17 +1141,27 @@ public:
 								string quest;
 								int ind = 0;
 								string last;
-								for (const auto a : fs::directory_iterator(path))
+
 								{
-									last = a.path().u8string();
-									in.open(a.path());
-									getline(in, quest);
-									cout << ++ind <<".  " << quest << endl;
-									in.close();
+									vector<string> questions;
+									for (const auto a : fs::directory_iterator(path))
+									{
+										questions.push_back(a.path().u8string());
+									}
+									sort(questions.begin(), questions.end(), [](string& s1, string& s2) {return std::accumulate(s1.begin(), s1.end(), 0) < std::accumulate(s2.begin(), s2.end(), 0); });
+									for_each(questions.begin(), questions.end(), [&](string& s)
+									{
+										in.open(s);
+										getline(in, quest);
+										cout << ++ind << ".  " << quest << endl;
+										in.close();
+									});
 								}
+								
 								int number;
 								cout << "Number of the question you want to delete: ";
 								cin >> number;
+								cin.ignore();
 								if (fs::exists(path + to_string(number) + ".txt"))
 								{
 									fs::remove(path + to_string(number) + ".txt");
@@ -1157,7 +1205,9 @@ public:
 					default:
 						break;
 					}
+					
 				}
+				c = 0;
 			}
 				break;
 			default:

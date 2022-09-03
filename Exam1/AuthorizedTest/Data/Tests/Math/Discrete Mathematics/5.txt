@@ -1,0 +1,4 @@
+The truth value of "4+3=7 or 5 is not prime"?
+1
+False
+True

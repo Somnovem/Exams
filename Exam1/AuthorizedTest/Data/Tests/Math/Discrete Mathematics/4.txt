@@ -1,0 +1,6 @@
+Subset of the set A={} is?
+3
+A
+{}
+Empty set
+All of the above

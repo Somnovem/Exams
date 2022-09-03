@@ -1,0 +1,6 @@
+{x: x is an integer neither + nor -} is _____
+3
+Empty set
+Non-empty set
+Finite set
+Non-empty and finite set

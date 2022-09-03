@@ -1,0 +1,6 @@
+if set is empty,number of subsets is?
+0
+1
+2
+0
+4

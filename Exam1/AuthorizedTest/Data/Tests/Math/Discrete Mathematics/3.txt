@@ -1,0 +1,6 @@
+Which of the following is subset of{1,2,3,4}?
+3
+{1,2}
+{1,2,3}
+{1}
+All of the above

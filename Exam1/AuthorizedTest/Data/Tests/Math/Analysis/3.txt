@@ -1,6 +1,0 @@
-What is 0x0?
-0
-0
-infinity
-UB
-1

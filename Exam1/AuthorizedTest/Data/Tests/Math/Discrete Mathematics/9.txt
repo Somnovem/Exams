@@ -1,0 +1,4 @@
+The number of subsets of a set is 5.
+1
+True
+False

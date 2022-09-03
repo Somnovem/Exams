@@ -1,0 +1,6 @@
+{x is a real number between 1 and 2} is ____
+0
+Infinite set
+Finite set
+Empty set
+None of the mentioned
