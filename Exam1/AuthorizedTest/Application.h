@@ -4,7 +4,7 @@
 class Application
 {
 	User* user = nullptr;
-	void reg()
+	void reg() noexcept
 	{
 		std::string login;
 		std::string password;
@@ -97,7 +97,7 @@ class Application
 		out.close();
 		user->menu();
 	}
-	void log()
+	void log()noexcept
 	{
 		system("cls");
 		if ((!fs::exists("Credentials")
@@ -185,8 +185,8 @@ class Application
 		user->menu();
 	}
 public:
-	Application() {}
-	void menu()
+	Application()noexcept {}
+	void menu()noexcept
 	{
 		while (true)
 		{

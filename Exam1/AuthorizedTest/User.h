@@ -14,8 +14,8 @@ protected:
 class Guest : public User
 {
 public:
-	Guest(const string path) : User(path) {}
-	virtual void menu() noexcept override
+	Guest(const string path) noexcept : User(path)  {}
+	virtual void menu() noexcept  override
 	{
 		system("cls");
 		auto chooseDirectory = []()->string
@@ -335,7 +335,7 @@ public:
 class Admin : public User
 {
 public:
-	Admin(const string path) : User(path) {}
+	Admin(const string path) noexcept : User(path) {}
 	virtual void menu()noexcept override
 	{
 		int c = 0;
@@ -428,7 +428,28 @@ public:
 							system("cls");
 							cout << "Login: " << login << endl;
 							cout << "Password(from 12 to 24 symbols): ";
-							getline(cin, password);
+							password.clear();
+							while (true)
+							{
+								char a = _getch();
+								if (a == 13)
+								{
+									break;
+								}
+								else if (a == '\b')
+								{
+									if (password.size() > 0)
+									{
+										password.pop_back();
+										cout << "\b \b";
+									}
+								}
+								if ((a > 47 && a < 58) || (a > 64 && a < 91) || (a > 96 && a < 123))  //ASCii code for integer and alphabet
+								{
+									password += a;
+									printf("*");
+								}
+							}
 							if (password.length() < 12 || password.length() > 24)
 							{
 								cout << "Incorrect length of password" << endl;
@@ -455,11 +476,11 @@ public:
 						{
 							vector<string> show(logins);
 							for_each(show.begin(), show.end(), [](string& s) {s.erase(s.begin(), s.begin() + s.find_last_of("\\") + 1); s.erase(s.begin() + s.find_last_of("."), s.end()); });
-							gotoxy(33, 8);
+							gotoxy(20, 8);
 							cout << "Choose user to delete: ";
 							c = Menu::select_vertical(show, HorizontalAlignment::Center, 9);
 							fs::remove(logins[c]);
-							gotoxy(33, 10);
+							gotoxy(20, 10);
 							cout << "Successfully deleted" << endl;
 						}
 						else
@@ -525,13 +546,13 @@ public:
 					case 1:
 					{
 						system("cls");
-						gotoxy(40, 14);
+						gotoxy(20, 14);
 						string login;
 						cout << "Login of the user whose stats to show: ";
 						getline(cin, login);
 						if (!fs::exists("Credentials\\" + login + ".txt") && !fs::exists("Data\\Admins\\" + login + ".txt"))
 						{
-							gotoxy(40, 15);
+							gotoxy(20, 15);
 							cout << "No such login exists" << endl;
 						}
 						else
@@ -542,6 +563,13 @@ public:
 							for (const auto& a : fs::directory_iterator(path))
 							{
 								tests.push_back(a.path().u8string());
+							}
+							if (tests.size() == 0)
+							{
+								gotoxy(20, 15);
+								cout << "No records" << endl;
+								system("pause");
+								break;
 							}
 							ifstream in;
 							string holder;
@@ -590,6 +618,13 @@ public:
 						for (const auto& a : fs::directory_iterator("Data\\Statistics"))
 						{
 							tests.push_back(a.path().u8string());
+						}
+						if (tests.size() == 0)
+						{
+							gotoxy(20, 15);
+							cout << "No records" << endl;
+							system("pause");
+							break;
 						}
 						int entries = 0;
 						double timeOverall = 0;
@@ -922,7 +957,6 @@ public:
 											}
 										}
 
-
 									}
 									system("cls");
 									m = 10;
@@ -947,6 +981,10 @@ public:
 									for (const auto& newQuestion : fs::directory_iterator(path))
 									{
 										questions.push_back(newQuestion.path().u8string());
+									}
+									if (questions.size() == 0)
+									{
+										questions.push_back(path += "0.txt");
 									}
 									sort(questions.begin(), questions.end(), [](string& s1, string& s2) {return std::accumulate(s1.begin(), s1.end(), 0) < std::accumulate(s2.begin(), s2.end(), 0); });
 									lastFile = questions.back();
@@ -1025,7 +1063,8 @@ public:
 										{
 											system("cls");
 											m = 10;
-											for_each(temp.answers.begin(), temp.answers.end(), [&m](string& answer) {gotoxy(25, m++); cout << answer << endl; });
+											int ind = 1;
+											for_each(temp.answers.begin(), temp.answers.end(), [&m,&ind](string& answer) {gotoxy(25, m++); cout<<ind++<<".   " << answer << endl; });
 											gotoxy(25, m);
 											cout << "Correct answer: ";
 											cin >> temp.correct;
@@ -1189,6 +1228,7 @@ public:
 					case 4:
 					{
 						string path = chooseDirectory();
+						path.pop_back();
 						fs::remove(path);
 					}
 						break;

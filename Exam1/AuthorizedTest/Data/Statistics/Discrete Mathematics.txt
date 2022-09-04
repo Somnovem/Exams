@@ -1,0 +1,5 @@
+Time spent: 97.6484 s
+Finished at: Sun Sep  4 15:19:07 2022
+admin
+Correct answers: 77.7778 %
+-------------------------------------

@@ -17,14 +17,14 @@ public:
 	string question;
 	vector<string> answers;
 	size_t correct = 0;
-	Question() {}
-	Question(const Question& _Other)
+	Question()noexcept {}
+	Question(const Question& _Other)noexcept
 	{
 		this->question = _Other.question;
 		this->answers = _Other.answers;
 		this->correct = _Other.correct;
 	}
-	Question& operator=(const Question& _Other)
+	Question& operator=(const Question& _Other)noexcept
 	{
 		if (&_Other == this)
 		{
@@ -38,7 +38,7 @@ public:
 		this->answers = _Other.answers;
 		this->correct = _Other.correct;
 	}
-	int pass()
+	int pass()noexcept
 	{
 		answers.push_back("Exit");
 		while (true)
@@ -72,8 +72,7 @@ class Test
 	vector<Question> test;
 	vector<int> correctness;
 public:
-
-	void constructTest(string path)
+	void constructTest(string path)noexcept
 	{
 		vector<string> quests;
 		for (const auto& file : fs::directory_iterator(path))
@@ -97,7 +96,7 @@ public:
 			in.close();
 		}
 	}
-	void play(const string& pathToTest,const string& user, size_t from = 0)
+	void play(const string& pathToTest,const string& user, size_t from = 0)noexcept
 	{
 		if (!fs::exists("Data\\Unfinished Tests"))
 		{
@@ -183,7 +182,7 @@ public:
 
 		system("pause");
 	}
-	void fill_and_play(const string& answers, const string& pathToTest, const string& user)
+	void fill_and_play(const string& answers, const string& pathToTest, const string& user)noexcept
 	{
 		for (size_t i = 0; i < answers.size(); i++)
 		{
