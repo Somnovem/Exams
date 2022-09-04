@@ -344,59 +344,60 @@ public:
 			system("cls");
 			gotoxy(37, 2);
 			cout << "Admin's workspace" << endl;
-			 c = Menu::select_vertical({"Change own credentials","Work with users","Statistics","Work with tests","Exit"}, HorizontalAlignment::Left, 18);
+			c = Menu::select_vertical({"Change own credentials","Work with users","Statistics","Work with tests","Exit"}, HorizontalAlignment::Left, 18);
 			switch (c)
 			{
 			case 0:
-				while (c < 2)
+			{
+			while (c < 2)
+			{
+				system("cls");
+				c = Menu::select_vertical({ "Change login","Change password","Exit" }, HorizontalAlignment::Center);
+				switch (c)
 				{
-					system("cls");
-					c = Menu::select_vertical({ "Change login","Change password","Exit" }, HorizontalAlignment::Center);
-					switch (c)
+				case 0:
+				{
+					string temp;
+					cout << "New login: ";
+					getline(cin, temp);
+					string tempPath(path);
+					string login;
+					login.assign(tempPath.begin() + tempPath.find_last_of("\\"), temp.begin() + tempPath.find_last_of("."));
+					tempPath.erase(12, login.size());
+					tempPath.insert(12, temp);
+					tempPath += ".txt";
+					fs::rename(static_cast<const string>(path), static_cast<const string>(tempPath));
+				}
+				break;
+				case 1:
+				{
+					while (true)
 					{
-					case 0:
-					{
+						system("cls");
+						gotoxy(12, 12);
+						cout << "New password: ";
 						string temp;
-						cout << "New login: ";
 						getline(cin, temp);
-						string tempPath(path);
-						string login;
-						login.assign(tempPath.begin() + tempPath.find_last_of("\\"),temp.begin() + tempPath.find_last_of("."));
-						tempPath.erase(12, login.size());
-						tempPath.insert(12, temp);
-						tempPath += ".txt";
-						fs::rename(static_cast<const string>(path), static_cast<const string>(tempPath));
-					}
-					break;
-					case 1:
-					{
-						while (true)
+						if (temp.size() < 12 || temp.size() > 24)
 						{
-							system("cls");
-							gotoxy(12, 12);
-							cout << "New password: ";
-							string temp;
-							getline(cin, temp);
-							if (temp.size() < 12 || temp.size() > 24)
-							{
-								gotoxy(12, 13);
-								cout << "Incorrect size" << endl;
-								system("pause");
-								continue;
-							}
-							ofstream out(path);
-							out << md5(temp);
-							out.close();
-							break;
+							gotoxy(12, 13);
+							cout << "Incorrect size" << endl;
+							system("pause");
+							continue;
 						}
-					}
-					break;
-					default:
+						ofstream out(path);
+						out << md5(temp);
+						out.close();
 						break;
 					}
-
 				}
-				c = 0;
+				break;
+				default:
+					break;
+				}
+
+			}
+			c = 0; }
 				break;
 			case 1:
 			{
@@ -593,13 +594,16 @@ public:
 										{
 											cout << "Test: " << testName;
 											m = holder.find(login, m);
-											m += login.size();
-											cout << temp << endl;
+											while (m > 0 && holder[m] != '-')
+											{
+												m--;
+											}
+											++m;
 											while (holder[m] != '-')
 											{
-												cout << holder[m++];
+												cout << holder[m];
+												++m;
 											}
-											cout << endl;
 											cout << "----------------------------" << endl;
 											continue;
 										}
@@ -1155,15 +1159,32 @@ public:
 							{
 
 								vector<string> questions;
+
 								for (const auto& a : fs::directory_iterator(path))
 								{
 									questions.push_back(a.path().u8string());
 								}
 								sort(questions.begin(), questions.end(), [](string& s1, string& s2) {return std::accumulate(s1.begin(), s1.end(), 0) < std::accumulate(s2.begin(), s2.end(), 0); });
+
 								vector<string> show(questions);
 								for_each(show.begin(), show.end(), [](string& str) {str.erase(str.begin(),str.begin()+ str.find_last_of("\\") + 1); });
 								for_each(show.begin(), show.end(), [](string& str) {str.erase(str.begin() + str.find_first_of("."),str.end()); });
+
+								{
+									ifstream in;
+									string quest;
+									int ind = 0;
+									for_each(show.begin(), show.end(), [&questions,&in,&quest,&ind](string& s)
+									{
+											in.open(questions[ind++]);
+											getline(in, quest);
+											in.close();
+											s += ".   " + quest;
+									});
+								}
+								
 								c = Menu::select_vertical(show, HorizontalAlignment::Center);
+
 								ifstream in(questions[c]);
 								string temp;
 								system("cls");
