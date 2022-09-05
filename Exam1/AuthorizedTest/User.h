@@ -115,6 +115,7 @@ public:
 				break;
 			case 2:
 			{
+				c = 0;
 				while (c < 2)
 				{
 					system("cls");
@@ -158,6 +159,10 @@ public:
 								}
 								cout << "----------------------------" << endl;
 								continue;
+							}
+							else if (m == 0)
+							{
+								cout << "No records" << endl;
 							}
 							break;
 						}
@@ -212,6 +217,10 @@ public:
 										cout << "----------------------------" << endl;
 										continue;
 									}
+									else if (m == 0)
+									{
+										cout << "No records in " << testName << endl;
+									}
 									break;
 								}
 								in.close();
@@ -222,7 +231,6 @@ public:
 					default:
 						break;
 					}
-					c = 0;
 				}
 			}
 			  break;
@@ -255,7 +263,7 @@ public:
 								cout << "\b \b";
 							}
 						}
-						if ((a > 47 && a < 58) || (a > 64 && a < 91) || (a > 96 && a < 123))  //ASCii code for integer and alphabet
+						if ((a > 47 && a < 58) || (a > 64 && a < 91) || (a > 96 && a < 123)) 
 						{
 							guess += a;
 							printf("*");
@@ -307,7 +315,7 @@ public:
 								cout << "\b \b";
 							}
 						}
-						if ((a > 47 && a < 58) || (a > 64 && a < 91) || (a > 96 && a < 123))  //ASCii code for integer and alphabet
+						if ((a > 47 && a < 58) || (a > 64 && a < 91) || (a > 96 && a < 123))  
 						{
 							password += a;
 							printf("*");
@@ -445,7 +453,7 @@ public:
 										cout << "\b \b";
 									}
 								}
-								if ((a > 47 && a < 58) || (a > 64 && a < 91) || (a > 96 && a < 123))  //ASCii code for integer and alphabet
+								if ((a > 47 && a < 58) || (a > 64 && a < 91) || (a > 96 && a < 123))
 								{
 									password += a;
 									printf("*");
