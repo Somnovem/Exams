@@ -15,29 +15,36 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\AuthorizedTest\User.h">
+    <ClInclude Include="..\Library\Data.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Library\Functions.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Library\Menu.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Application.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\AuthorizedTest\Application.h">
+    <ClInclude Include="md5.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\AuthorizedTest\md5.h">
+    <ClInclude Include="Tests.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\AuthorizedTest\Tests.h">
+    <ClInclude Include="User.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\AuthorizedTest\AuthorizedTest.vcxproj" />
-    <None Include="..\AuthorizedTest\AuthorizedTest.vcxproj.filters" />
-    <None Include="..\AuthorizedTest\AuthorizedTest.vcxproj.user" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\AuthorizedTest\main.cpp">
+    <ClCompile Include="..\Library\Functions.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\AuthorizedTest\md5.cpp">
+    <ClCompile Include="md5.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
