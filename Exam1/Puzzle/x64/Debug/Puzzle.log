@@ -1,5 +1,6 @@
 ﻿  main.cpp
-C:\Users\Artem\source\repos\Exam\Puzzle\main.cpp(213,12): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
-C:\Users\Artem\source\repos\Exam\Puzzle\main.cpp(263,13): warning C4244: =: преобразование "__int64" в "int", возможна потеря данных
-C:\Users\Artem\source\repos\Exam\Puzzle\main.cpp(146): warning C4715: findZero: значение возвращается не при всех путях выполнения
-  Puzzle.vcxproj -> C:\Users\Artem\source\repos\Exam\x64\Debug\Puzzle.exe
+C:\Users\Artem\Documents\GitHub\Exams\Exam1\Puzzle\main.cpp(217,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\Artem\Documents\GitHub\Exams\Exam1\Puzzle\main.cpp(267,13): warning C4244: '=': conversion from '__int64' to 'int', possible loss of data
+C:\Users\Artem\Documents\GitHub\Exams\Exam1\Puzzle\main.cpp(146): warning C4715: 'findZero': not all control paths return a value
+  LINK : C:\Users\Artem\Documents\GitHub\Exams\Exam1\x64\Debug\Puzzle.exe not found or not built by the last incremental link; performing full link
+  Puzzle.vcxproj -> C:\Users\Artem\Documents\GitHub\Exams\Exam1\x64\Debug\Puzzle.exe
