@@ -1,9 +1,10 @@
 #pragma once
 #include<iostream>
 #include <windows.h>
-
+#include <string>
+#include <experimental/filesystem>
 using namespace std;
-
+namespace fs = std::experimental::filesystem;
 template<class T>
 int findKey(T* arr, int size, T key)
 {
@@ -92,4 +93,31 @@ bool evenFirst(T a, T b)
 	if (a % 2 == 0 && b % 2 == 1)
 		return true;
 	return asc(a, b);
+}
+string getPassword()
+{
+	string guess;
+	while (true)
+	{
+		char a = _getch();
+		if (a == 13)
+		{
+			break;
+		}
+		else if (a == '\b')
+		{
+			if (guess.size() > 0)
+			{
+				guess.pop_back();
+				cout << "\b \b";
+			}
+		}
+		if ((a > 47 && a < 58) || (a > 64 && a < 91) || (a > 96 && a < 123))  //ASCii code for integer and alphabet
+		{
+			guess += a;
+			printf("*");
+		}
+	}
+	cout << endl;
+	return guess;
 }

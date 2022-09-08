@@ -1,6 +1,5 @@
 #pragma once
 #include "User.h"
-#include <windows.h>
 class Application
 {
 	User* user = nullptr;
@@ -46,42 +45,7 @@ class Application
 			}
 			break;
 		}
-		//getting the password
-		while (true)
-		{
-			system("cls");
-			cout << "Login: " << login << endl;
-			cout << "Password(from 12 to 24 symbols): ";
-			password.clear();
-			while (true)
-			{
-				char a = _getch();
-				if (a == 13)
-				{
-					break;
-				}
-				else if (a == '\b')
-				{
-					if (password.size() > 0)
-					{
-						password.pop_back();
-						cout << "\b \b";
-					}
-				}
-				if ((a > 47 && a < 58) || (a > 64 && a < 91) || (a > 96 && a < 123))  //ASCii code for integer and alphabet
-				{
-					password += a;
-					printf("*");
-				}
-			}
-			if (password.length() < 12 || password.length() > 24)
-			{
-				cout << "Incorrect length of password" << endl;
-				system("pause");
-				continue;
-			}
-			break;
-		}
+		password = getPassword();
 		ofstream out;
 		if (fs::is_empty("Data\\Admins"))
 		{
@@ -144,29 +108,7 @@ class Application
 			cout << "Login: " << login << endl;
 			cout << "Password: ";
 			std::string guess;
-			guess.clear();
-			while (true)
-			{
-				char a = _getch();
-				if (a == 13)
-				{
-					break;
-				}
-				else if (a == '\b')
-				{
-					if (guess.size() > 0)
-					{
-						guess.pop_back();
-						cout << "\b \b";
-					}
-				}
-				if ((a > 47 && a < 58) || (a > 64 && a < 91) || (a > 96 && a < 123))  //ASCii code for integer and alphabet
-				{
-					guess += a;
-					printf("*");
-				}
-			}
-			cout << endl;
+			guess = getPassword();
 			if (md5(guess) == password)
 			{
 				break;
