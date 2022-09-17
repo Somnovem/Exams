@@ -1,4 +1,6 @@
+#include "ToDoManager.h"
 int main()
 {
-	return 0;
+	ToDoManager* application = ToDoManager::getinstance();
+	application->menu();
 }
