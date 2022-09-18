@@ -127,9 +127,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Functions.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Functions.h" />
+    <ClInclude Include="Menu.h" />
     <ClInclude Include="Task.h" />
     <ClInclude Include="TaskListManager.h" />
     <ClInclude Include="ToDoManager.h" />
