@@ -100,14 +100,15 @@ void TaskListManager::deleteTask()
 
 void TaskListManager::clear()
 {
-	system("cls");
-	gotoxy(20, 10);
-	cout << "Are you sure you want to clear the to-do list?" << endl;
-	bool c = Menu::select_vertical({ "No","Yes" }, HorizontalAlignment::Center, 12);
-	if (c)
-	{
-		taskList->tasks.clear();
-	}
+	//system("cls");
+	//gotoxy(20, 10);
+	//cout << "Are you sure you want to clear the to-do list?" << endl;
+	//bool c = Menu::select_vertical({ "No","Yes" }, HorizontalAlignment::Center, 12);
+	//if (c)
+	//{
+	//	taskList->tasks.clear();
+	//}
+	taskList->save();
 }
 
 void TaskListManager::fullView()

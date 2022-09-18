@@ -1,30 +1,36 @@
 #pragma once
 #define _CRT_SECURE_NO_WARNINGS
+#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
 #include <iostream>
 #include <string>
+#include <fstream>
 #include <list>
 #include <chrono>
 #include <ctime>
+#include <experimental/filesystem>
 #include "Menu.h"
 using namespace std;
+namespace fs = std::experimental::filesystem;
+
 enum Priority {LOW,MEDIUM,HIGH,EXTREME};
 enum Month {JAN = 1,FBR,MAR,APR,MAY,JUN,JUL,AUG,SEP,OCT,NOV,DEC};
+
 
 ostream& operator<<(ostream& out, const Priority& prio)
 {
 	switch (prio)
 	{
 	case LOW:
-		cout << "Low";
+		out << "Low";
 		break;
 	case MEDIUM:
-		cout << "Medium";
+		out << "Medium";
 		break;
 	case HIGH:
-		cout << "High";
+		out << "High";
 		break;
 	case EXTREME:
-		cout << "Extreme";
+		out << "Extreme";
 		break;
 	default:
 		break;
@@ -36,46 +42,97 @@ ostream& operator<<(ostream& out,const Month& mnt)
 	switch (mnt)
 	{
 	case JAN:
-		cout << "JAN" ;
+		out << "JAN";
 		break;
 	case FBR:
-		cout << "FBR";
+		out << "FBR";
 		break;
 	case MAR:
-		cout << "MAR";
+		out << "MAR";
 		break;
 	case APR:
-		cout << "APR";
+		out << "APR";
 		break;
 	case MAY:
-		cout << "MAY";
+		out << "MAY";
 		break;
 	case JUN:
-		cout << "JUN";
+		out << "JUN";
 		break;
 	case JUL:
-		cout << "JUL";
+		out << "JUL";
 		break;
 	case AUG:
-		cout << "AUG";
+		out << "AUG";
 		break;
 	case SEP:
-		cout << "SEP";
+		out << "SEP";
 		break;
 	case OCT:
-		cout << "OCT";
+		out << "OCT";
 		break;
 	case NOV:
-		cout << "NOV";
+		out << "NOV";
 		break;
 	case DEC:
-		cout << "DEC";
+		out << "DEC";
 		break;
 	default:
 		break;
 	}
 	return out;
 }
+ofstream& operator<<(ofstream& out, const Priority& prio)
+{
+	out << static_cast<int>(prio);
+	return out;
+}
+ofstream& operator<<(ofstream& out, const Month& mnt)
+{
+	switch (mnt)
+	{
+	case JAN:
+		out << "JAN";
+		break;
+	case FBR:
+		out << "FBR";
+		break;
+	case MAR:
+		out << "MAR";
+		break;
+	case APR:
+		out << "APR";
+		break;
+	case MAY:
+		out << "MAY";
+		break;
+	case JUN:
+		out << "JUN";
+		break;
+	case JUL:
+		out << "JUL";
+		break;
+	case AUG:
+		out << "AUG";
+		break;
+	case SEP:
+		out << "SEP";
+		break;
+	case OCT:
+		out << "OCT";
+		break;
+	case NOV:
+		out << "NOV";
+		break;
+	case DEC:
+		out << "DEC";
+		break;
+	default:
+		break;
+	}
+	return out;
+}
+
 
 Month stoM(const string& str)
 {
@@ -218,5 +275,18 @@ public:
 	string name;
 	list<Task> tasks;
 	TaskList(string n) : name{ n } {}
+	void save()
+	{
+		ofstream out("To-Do\\" + name + ".txt");
+		for_each(tasks.begin(), tasks.end(), [&out](Task& task) 
+	    {
+				out << task.getTask() << endl;
+				out << task.getDeadline() << endl;
+				out << task.getPriority() << endl;
+				out << task.getTag() << endl;
+	    });
+		out.close();
+	}
+	void load() {}
 };
 

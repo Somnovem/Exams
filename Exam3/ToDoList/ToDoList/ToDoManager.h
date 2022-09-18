@@ -1,5 +1,6 @@
 #pragma once
 #include "TaskListManager.h"
+namespace fs = std::experimental::filesystem;
 int chooseList(list<std::shared_ptr<TaskList>> List)
 {
 	vector<string> lists;
@@ -35,6 +36,10 @@ public:
 	static ToDoManager* getinstance();
 	void menu()
 	{
+		if (!fs::exists("To-Do"))
+		{
+			fs::create_directory("To-Do");
+		}
 		int c = 0;
 		while (c < 4)
 		{
@@ -95,7 +100,6 @@ void ToDoManager::deleteList()
 
 void ToDoManager::configureList()
 {
-
 
 	int c = chooseList(List);
 	if (c < 0)
