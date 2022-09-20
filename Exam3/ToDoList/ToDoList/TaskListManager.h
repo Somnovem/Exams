@@ -12,16 +12,18 @@ class TaskListManager
 	void deleteTask();
 	void changeTask();
 	void clear();
-	void fullView();
+	void fullView() const;
 public:
 	static TaskListManager* getinstance();
 	void menu();
 	void setTaskList(std::shared_ptr<TaskList> _Other) { taskList = _Other; }
-	bool searchConcrete(const string& taska);
-	void searchTag(const string& taga);
-	void searchTime(const Time& less);
-	void searchPriority(const Priority& less);
-	void searchDeadline();
+	bool searchConcrete(const string& taska) const;
+	bool searchTag(const string& taga) const;
+	bool searchTime(const Time& less) const;
+	bool searchPriority(const Priority& less) const;
+	bool searchDeadline() const;
+	void save() const;
+	void load();
 };
 
 TaskListManager* TaskListManager::instance = nullptr;
@@ -40,9 +42,20 @@ void TaskListManager::addTask()
 	//show what tasks are already present
 	Task newTask;
 	system("cls");
+	{
+		int m = 2;
+		gotoxy(30, m++);
+		cout << "Already exist: " << endl;
+		for_each(taskList->tasks.begin(), taskList->tasks.end(), [&](Task& task)
+			{
+				gotoxy(30, m++);
+				cout << task.getTask() << endl;
+			});
+	}
 	//getting the task itself
 	{
 		string task;
+		gotoxy(2, 15);
 		cout << "Task: ";
 		getline(cin, task);
 		newTask.setTask(task);
@@ -100,39 +113,15 @@ void TaskListManager::deleteTask()
 
 void TaskListManager::clear()
 {
-	//system("cls");
-	//gotoxy(20, 10);
-	//cout << "Are you sure you want to clear the to-do list?" << endl;
-	//bool c = Menu::select_vertical({ "No","Yes" }, HorizontalAlignment::Center, 12);
-	//if (c)
-	//{
-	//	taskList->tasks.clear();
-	//}
-	taskList->save();
+	bool c = getNoOrYes("Are you sure you want to clear the list?");
+	if (c)
+	{
+		taskList->tasks.clear();
+	}
 }
 
-void TaskListManager::fullView()
+void TaskListManager::fullView()const
 {
-	auto viewPriority = [](Priority prio)->string
-	{
-		switch (prio)
-		{
-		case LOW:
-			return "Low";
-			break;
-		case MEDIUM:
-			return "Medium";
-			break;
-		case HIGH:
-			return "High";
-			break;
-		case EXTREME:
-			return "EXTREME";
-			break;
-		default:
-			break;
-		}
-	};
 	system("cls");
 	if (taskList->tasks.empty())
 	{
@@ -143,9 +132,12 @@ void TaskListManager::fullView()
 	for_each(taskList->tasks.begin(), taskList->tasks.end(), [&](Task& task)
 		{
 			cout << "Task: " << task.getTask() << endl;
-			cout << "Priority: " << viewPriority(task.getPriority());
+			cout << "Priority: " << task.getPriority() << endl;
 			cout << "Deadline: " << task.getDeadline() << endl;
-			cout << "Tag: " << task.getTag() << endl;
+			if (!task.getTag().empty())
+			{
+				cout << "Tag: " << task.getTag() << endl;
+			}
 			cout << "------------------------------" << endl;
 		});
 	system("pause");
@@ -262,8 +254,9 @@ void TaskListManager::menu()
 	}
 }
 
-bool TaskListManager::searchConcrete(const string& taska)
+bool TaskListManager::searchConcrete(const string& taska) const
 {
+	system("cls");
 	for (size_t i = 0; i < taskList->tasks.size(); i++)
 	{
 		auto b = taskList->tasks.begin();
@@ -272,14 +265,17 @@ bool TaskListManager::searchConcrete(const string& taska)
 		{
 			cout <<"List: " << taskList->name << endl;
 			b->print();
+			system("pause");
 			return true;
 		}
 	}
 	return false;
 }
 
-void TaskListManager::searchTag(const string& taga)
+bool TaskListManager::searchTag(const string& taga) const
 {
+	bool found = false;
+	system("cls");
 	for (size_t i = 0; i < taskList->tasks.size(); i++)
 	{
 		auto b = taskList->tasks.begin();
@@ -288,12 +284,21 @@ void TaskListManager::searchTag(const string& taga)
 		{
 			cout << "List: " << taskList->name << endl;
 			b->print();
+			found = true;
 		}
 	}
+	if (found)
+	{
+		system("pause");
+	}
+
+	return found;
 }
 
-void TaskListManager::searchTime(const Time& less)
+bool TaskListManager::searchTime(const Time& less) const
 {
+	bool found = false;
+	system("cls");
 	for (size_t i = 0; i < taskList->tasks.size(); i++)
 	{
 		auto b = taskList->tasks.begin();
@@ -302,36 +307,75 @@ void TaskListManager::searchTime(const Time& less)
 		{
 			cout << "List: " << taskList->name << endl;
 			b->print();
+			found = true;
 		}
 	}
+	if (found)
+	{
+		system("pause");
+	}
+	return found;
 }
 
-void TaskListManager::searchPriority(const Priority& less)
+bool TaskListManager::searchPriority(const Priority& less) const
 {
+	bool found = false;
+	system("cls");
 	for (size_t i = 0; i < taskList->tasks.size(); i++)
 	{
 		auto b = taskList->tasks.begin();
 		advance(b, i);
-		if (b->getPriority() < less)
+		if (b->getPriority() == less)
 		{
 			cout << "List: " << taskList->name << endl;
 			b->print();
+			found = true;
 		}
 	}
+	if (found)
+	{
+		system("pause");
+	}
+	return found;
 }
 
-void TaskListManager::searchDeadline()
+bool TaskListManager::searchDeadline() const
 {
+	bool found = false;
+	system("cls");
 	Time current;
 	current.setCurrent();
 	for (size_t i = 0; i < taskList->tasks.size(); i++)
 	{
 		auto b = taskList->tasks.begin();
 		advance(b, i);
-		if (!(b->getDeadline() < current) || b->withinDay(current))
+		if (b->getDeadline() < current || b->withinDay(current))
 		{
 			cout << "List: " << taskList->name << endl;
 			b->print();
+			found = true;
 		}
+	}
+	if (found)
+	{
+		system("pause");
+	}
+	return found;
+}
+
+void TaskListManager::save() const
+{
+		taskList->save();
+}
+
+void TaskListManager::load()
+{
+	ifstream in("To-Do\\" + taskList->name + ".txt");
+	string newTask, newDeadline, newPriority, newTag;
+	while (getline(in,newTask) && getline(in,newDeadline) && getline(in,newPriority) && getline(in,newTag))
+	{
+		Task temp;
+		temp.load(newTask, newDeadline, newPriority, newTag);
+		taskList->tasks.push_back(temp);
 	}
 }

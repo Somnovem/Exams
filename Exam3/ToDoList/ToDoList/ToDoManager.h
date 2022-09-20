@@ -32,6 +32,8 @@ class ToDoManager
 	void deleteList();
 	void configureList();
 	void search();
+	void save();
+	void load();
 public:
 	static ToDoManager* getinstance();
 	void menu()
@@ -41,10 +43,10 @@ public:
 			fs::create_directory("To-Do");
 		}
 		int c = 0;
-		while (c < 4)
+		while (c < 6)
 		{
 			system("cls");
-			c = Menu::select_vertical({"Add list","Delete list","Configure list","Search","Exit"}, HorizontalAlignment::Left, 15);
+			c = Menu::select_vertical({"Add list","Delete list","Configure list","Search","Save","Load","Exit"}, HorizontalAlignment::Left, 15);
 			switch (c)
 			{
 			case 0:
@@ -58,6 +60,12 @@ public:
 				break;
 			case 3:
 				search();
+				break;
+			case 4:
+				save();
+				break;
+			case 5:
+				load();
 				break;
 			default:
 				break;
@@ -79,7 +87,20 @@ ToDoManager* ToDoManager::getinstance()
 
 void ToDoManager::addList()
 {
+	{
+		int m = 2;
+		gotoxy(50, m++);
+		cout << "Already exist: ";
+		for (size_t i = 0; i < List.size(); i++)
+		{
+			auto b = List.begin();
+			advance(b, i);
+			gotoxy(50, m++);
+			cout << (*b)->name << endl;
+		}
+	}
 	string temp;
+	gotoxy(2, 12);
 	cout << "Name of the new list: ";
 	getline(cin, temp);
 	TaskList bs(temp);
@@ -95,6 +116,10 @@ void ToDoManager::deleteList()
 	}
 	auto b = List.begin();
 	advance(b, c);
+	if (fs::exists("To-Do\\" + (*b)->name + ".txt"))
+	{
+		fs::remove("To-Do\\" + (*b)->name + ".txt");
+	}
 	List.erase(b);
 }
 
@@ -139,6 +164,7 @@ void ToDoManager::search()
 	};
 	auto searchTag = [&]()
 	{
+		bool isFound = false;
 		string temp;
 		system("cls");
 		gotoxy(20, 14);
@@ -147,12 +173,17 @@ void ToDoManager::search()
 		for_each(List.begin(), List.end(), [&](std::shared_ptr<TaskList> ptr)
 		{
 					manager->setTaskList(ptr);
-					manager->searchTag(temp);
+					isFound = manager->searchTag(temp);
 		});
-
+		if (!isFound)
+		{
+			cout << "No matches :(" << endl;
+			system("pause");
+		}
 	};
 	auto searchDate = [&]()
 	{
+		bool isFound = false;
 		system("cls");
 		gotoxy(20, 14);
 		cout << "Now you will input the deadline till which to search for" << endl;
@@ -161,25 +192,42 @@ void ToDoManager::search()
 		for_each(List.begin(), List.end(), [&](std::shared_ptr<TaskList> ptr)
 			{
 				manager->setTaskList(ptr);
-				manager->searchTime(less);
+				isFound = manager->searchTime(less);
 			});
+		if (!isFound)
+		{
+			cout << "No matches :(" << endl;
+			system("pause");
+		}
 	};
 	auto searchPriority = [&]()
 	{
+		bool isFound = false;
 		Priority less = getPriority();
 		for_each(List.begin(), List.end(), [&](std::shared_ptr<TaskList> ptr)
 		{
 				manager->setTaskList(ptr);
-				manager->searchPriority(less);
+				isFound = manager->searchPriority(less);
 		});
+		if (!isFound)
+		{
+			cout << "No matches :(" << endl;
+			system("pause");
+		}
 	};
 	auto searchDeadline = [&]()
 	{
+		bool isFound = false;
 		for_each(List.begin(), List.end(), [&](std::shared_ptr<TaskList> ptr)
 			{
 				manager->setTaskList(ptr);
-				manager->searchDeadline();
+				isFound = manager->searchDeadline();
 			});
+		if (!isFound)
+		{
+			cout << "No matches :(" << endl;
+			system("pause");
+		}
 	};
 	int c = 0;
 	while (c < 5)
@@ -208,3 +256,48 @@ void ToDoManager::search()
 		}
 	}
 }
+
+void ToDoManager::save()
+{
+	bool c = getNoOrYes("Are you sure you want to save changes to files?");
+	if (c)
+	{
+		for_each(List.begin(), List.end(), [&](std::shared_ptr<TaskList> ptr)
+			{
+				manager->setTaskList(ptr);
+				manager->save();
+			}
+		);
+	}
+}
+
+void ToDoManager::load()
+ {
+	bool c = getNoOrYes("Are you sure you want to load from files?");
+	if (c)
+	{
+		List.clear();
+		if (!fs::exists("To-Do") || fs::is_empty("To-Do\\"))
+		{
+			fs::create_directory("To-Do");
+			system("cls");
+			gotoxy(25, 14);
+			cout << "No records" << endl;
+			system("pause");
+			return;
+		}
+		for (const auto& a : fs::directory_iterator("To-Do\\"))
+		{
+			string temp = a.path().u8string();
+			temp.assign(temp.begin() + temp.find_last_of("\\") + 1, temp.begin() + temp.find_last_of("."));
+			TaskList bs(temp);
+			List.push_back(make_shared<TaskList>(bs));
+		}
+		for_each(List.begin(), List.end(), [&](std::shared_ptr<TaskList> ptr)
+			{
+				manager->setTaskList(ptr);
+				manager->load();
+			}
+		);
+	}
+ }

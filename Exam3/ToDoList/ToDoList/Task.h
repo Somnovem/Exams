@@ -9,6 +9,7 @@
 #include <ctime>
 #include <experimental/filesystem>
 #include "Menu.h"
+
 using namespace std;
 namespace fs = std::experimental::filesystem;
 
@@ -42,40 +43,40 @@ ostream& operator<<(ostream& out,const Month& mnt)
 	switch (mnt)
 	{
 	case JAN:
-		out << "JAN";
+		out << "Jan";
 		break;
 	case FBR:
-		out << "FBR";
+		out << "Fbr";
 		break;
 	case MAR:
-		out << "MAR";
+		out << "Mar";
 		break;
 	case APR:
-		out << "APR";
+		out << "Apr";
 		break;
 	case MAY:
-		out << "MAY";
+		out << "May";
 		break;
 	case JUN:
-		out << "JUN";
+		out << "Jun";
 		break;
 	case JUL:
-		out << "JUL";
+		out << "Jul";
 		break;
 	case AUG:
-		out << "AUG";
+		out << "Aug";
 		break;
 	case SEP:
-		out << "SEP";
+		out << "Sep";
 		break;
 	case OCT:
-		out << "OCT";
+		out << "Oct";
 		break;
 	case NOV:
-		out << "NOV";
+		out << "Nov";
 		break;
 	case DEC:
-		out << "DEC";
+		out << "Dec";
 		break;
 	default:
 		break;
@@ -92,47 +93,46 @@ ofstream& operator<<(ofstream& out, const Month& mnt)
 	switch (mnt)
 	{
 	case JAN:
-		out << "JAN";
+		out << "Jan";
 		break;
 	case FBR:
-		out << "FBR";
+		out << "Fbr";
 		break;
 	case MAR:
-		out << "MAR";
+		out << "Mar";
 		break;
 	case APR:
-		out << "APR";
+		out << "Apr";
 		break;
 	case MAY:
-		out << "MAY";
+		out << "May";
 		break;
 	case JUN:
-		out << "JUN";
+		out << "Jun";
 		break;
 	case JUL:
-		out << "JUL";
+		out << "Jul";
 		break;
 	case AUG:
-		out << "AUG";
+		out << "Aug";
 		break;
 	case SEP:
-		out << "SEP";
+		out << "Sep";
 		break;
 	case OCT:
-		out << "OCT";
+		out << "Oct";
 		break;
 	case NOV:
-		out << "NOV";
+		out << "Nov";
 		break;
 	case DEC:
-		out << "DEC";
+		out << "Dec";
 		break;
 	default:
 		break;
 	}
 	return out;
 }
-
 
 Month stoM(const string& str)
 {
@@ -149,6 +149,7 @@ Month stoM(const string& str)
 	else if (str == "Nov") return NOV;
 	else return DEC;
 }
+
 class Time
 {
 public:
@@ -198,31 +199,6 @@ public:
 	}
 };
 
-Time getTime()
-{
-	system("cls");
-	auto getWithCheck = [](size_t& param,size_t higher)->void
-	{
-		int buff;
-		cin >> buff;
-		if (buff < 0) buff = 0;
-		else if (buff >= higher) buff = higher-1;
-		param = buff;
-	};
-		size_t h, m, s,d,mon;
-		cout << "Hours: ";
-		getWithCheck(h,24);
-		cout << "Minutes: ";
-		getWithCheck(m, 60);
-		cout << "Seconds: ";
-		getWithCheck(s, 60);
-		cout << "Day: ";
-		getWithCheck(d, 32);
-		cout << "Month: ";
-		getWithCheck(mon, 13);
-		cin.ignore();
-		return Time(h,m,s,d,Month(mon));
-}
 ostream& operator<<(ostream& out, const Time& t)
 {
 	out << t.hours << ":" << t.minutes << ":" << t.seconds << " " << t.day<< " " << t.month;
@@ -237,15 +213,15 @@ class Task
 	string tag;
 public:
 	Task() {}
-	string getTask() { return task; }
+	string getTask() { return task; } const
 	void setTask(const string& _Other) { task = _Other; }
-	Priority getPriority() { return priority; }
+	Priority getPriority() { return priority; }const
 	void setPriority(const Priority& _Other) { priority = _Other; }
-	Time getDeadline() { return deadline; }
+	Time getDeadline() { return deadline; }const
 	void setDeadline(const Time& _Other) { deadline = _Other; }
-	string getTag() { return tag; }
+	string getTag() { return tag; }const
 	void setTag(const string& _Other) { tag = _Other; }
-	void print()
+	void print()const
 	{
 		cout << "Task: " << task << endl;
 		cout << "Deadline: " << deadline << endl;
@@ -253,21 +229,42 @@ public:
 		cout << "Tag: " <<tag << endl;
 		cout << "--------------------------------------------" << endl;
 	}
-	bool withinDay(const Time& _Other)
+	bool withinDay(const Time& _Other)const
 	{
 		Time temp = deadline;
 		temp.day += 1;
-		return !(temp < _Other);
+		return temp < _Other;
+	}
+	void load(string newTask, string newDeadline, string newPriority, string newTag)
+	{
+		task = newTask;
+		priority = Priority(stoi(newPriority));
+		tag = newTag;
+		Time temp;
+		string buff;
+
+		buff.assign(newDeadline.begin(), newDeadline.begin() + newDeadline.find_first_of(':'));
+		newDeadline.erase(newDeadline.begin(), newDeadline.begin() + newDeadline.find_first_of(':') + 1);
+		temp.hours = stoi(buff);
+
+		buff.assign(newDeadline.begin(), newDeadline.begin() + newDeadline.find_first_of(':'));
+		newDeadline.erase(newDeadline.begin(), newDeadline.begin() + newDeadline.find_first_of(':') + 1);
+		temp.minutes = stoi(buff);
+
+		buff.assign(newDeadline.begin(), newDeadline.begin() + newDeadline.find_first_of(' '));
+		newDeadline.erase(newDeadline.begin(), newDeadline.begin() + newDeadline.find_first_of(' ') + 1);
+		temp.seconds = stoi(buff);
+
+
+		buff.assign(newDeadline.begin(), newDeadline.begin() + newDeadline.find_first_of(' '));
+		newDeadline.erase(newDeadline.begin(), newDeadline.begin() + newDeadline.find_first_of(' ') + 1);
+		temp.day = stoi(buff);
+
+		temp.month = stoM(newDeadline);
+
+		deadline = temp;
 	}
 };
-Priority getPriority()
-{
-	system("cls");
-	gotoxy(20, 10);
-	cout << "Choose priority: ";
-	int c = Menu::select_vertical({ "Low","Medium","High","Extreme" }, HorizontalAlignment::Center, 11);
-	return (Priority(c));
-}
 
 class TaskList
 {
@@ -287,6 +284,49 @@ public:
 	    });
 		out.close();
 	}
-	void load() {}
 };
 
+
+
+Time getTime()
+{
+	system("cls");
+	auto getWithCheck = [](size_t& param, size_t higher)->void
+	{
+		int buff;
+		cin >> buff;
+		if (buff < 0) buff = 0;
+		else if (buff >= higher) buff = higher - 1;
+		param = buff;
+	};
+	size_t h, m, s, d, mon;
+	cout << "Hours: ";
+	getWithCheck(h, 24);
+	cout << "Minutes: ";
+	getWithCheck(m, 60);
+	cout << "Seconds: ";
+	getWithCheck(s, 60);
+	cout << "Day: ";
+	getWithCheck(d, 32);
+	cout << "Month: ";
+	getWithCheck(mon, 13);
+	cin.ignore();
+	return Time(h, m, s, d, Month(mon));
+}
+
+bool getNoOrYes(const string& warning)
+{
+	system("cls");
+	gotoxy(20, 10);
+	cout << warning << endl;
+	return Menu::select_vertical({ "No","Yes" }, HorizontalAlignment::Center, 12);
+}
+
+Priority getPriority()
+{
+	system("cls");
+	gotoxy(20, 10);
+	cout << "Choose priority: ";
+	int c = Menu::select_vertical({ "Low","Medium","High","Extreme" }, HorizontalAlignment::Center, 11);
+	return (Priority(c));
+}
