@@ -141,8 +141,8 @@ void ToDoFacade::search()
 
 void ToDoFacade::save()
 {
-	bool c = getNoOrYes("Are you sure you want to save changes to files?");
-	if (c)
+
+	if (getNoOrYes("Are you sure you want to save changes to files?"))
 	{
 		for_each(List.begin(), List.end(), [&](std::shared_ptr<TaskList> ptr)
 			{
@@ -155,8 +155,7 @@ void ToDoFacade::save()
 
 void ToDoFacade::load()
  {
-	bool c = getNoOrYes("Are you sure you want to load from files?");
-	if (c)
+	if (getNoOrYes("Are you sure you want to load from files?"))
 	{
 		List.clear();
 		if (!fs::exists("To-Do") || fs::is_empty("To-Do\\"))

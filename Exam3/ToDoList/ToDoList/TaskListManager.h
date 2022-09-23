@@ -46,9 +46,7 @@ void TaskListFacade::addTask()
 	{
 		system("cls");
 		gotoxy(15, 9);
-		cout << "Want to add tag?" << endl;
-		bool c = Menu::select_vertical({"Yes","No"},HorizontalAlignment::Center,11);
-		if (c)
+		if (getNoOrYes("Want to add tag?"))
 		{
 			newTask.setTag("");
 		}
@@ -89,8 +87,7 @@ void TaskListFacade::deleteTask()
 
 void TaskListFacade::clear()
 {
-	bool c = getNoOrYes("Are you sure you want to clear the list?");
-	if (c)
+	if (getNoOrYes("Are you sure you want to clear the list?"))
 	{
 		taskList->tasks.clear();
 	}
