@@ -41,5 +41,8 @@
     <ClInclude Include="Menu.h">
       <Filter>Header Files\Misc</Filter>
     </ClInclude>
+    <ClInclude Include="SearchCommand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

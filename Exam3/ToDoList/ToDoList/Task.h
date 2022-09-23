@@ -16,7 +16,6 @@ namespace fs = std::experimental::filesystem;
 enum Priority {LOW,MEDIUM,HIGH,EXTREME};
 enum Month {JAN = 1,FBR,MAR,APR,MAY,JUN,JUL,AUG,SEP,OCT,NOV,DEC};
 
-
 ostream& operator<<(ostream& out, const Priority& prio)
 {
 	switch (prio)
@@ -264,6 +263,21 @@ public:
 
 		deadline = temp;
 	}
+	Task(const Task& _Other) 
+	{
+		this->task = _Other.task;
+		this->priority = _Other.priority;
+		this->deadline = _Other.deadline;
+		this->tag = _Other.tag;
+	}
+	Task& operator=(const Task& _Other)
+	{
+		if (&_Other == this) return *this;
+		this->task = _Other.task;
+		this->priority = _Other.priority;
+		this->deadline = _Other.deadline;
+		this->tag = _Other.tag;
+	}
 };
 
 class TaskList
@@ -284,9 +298,31 @@ public:
 	    });
 		out.close();
 	}
+	void sort()
+	{
+		if (tasks.size() == 0)
+		{
+			return;
+		}
+		int i, j;
+		for ( i = 0; i < tasks.size() - 1; i++)
+		{
+			auto a = tasks.begin();
+			advance(a, i);
+			for (j = 0; j < tasks.size() - i - 1; j++)
+			{
+				auto b = tasks.begin();
+				advance(b, j + 1);
+				if (a->getPriority() < b->getPriority())
+				{
+					auto temp = *a;
+					*a = *b;
+					*b = temp;
+				}
+			}
+		}
+	}
 };
-
-
 
 Time getTime()
 {

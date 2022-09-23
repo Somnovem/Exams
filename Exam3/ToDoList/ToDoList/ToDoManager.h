@@ -22,12 +22,12 @@ int chooseList(list<std::shared_ptr<TaskList>> List)
 	}
 	return c;
 }
-class ToDoManager
+class ToDoFacade
 {
-	static ToDoManager* instance;
+	static ToDoFacade* instance;
 	list<std::shared_ptr<TaskList>> List;
-	TaskListManager* manager = TaskListManager::getinstance();
-	ToDoManager() {};
+	TaskListFacade* manager = TaskListFacade::getinstance();
+	ToDoFacade() {};
 	void addList();
 	void deleteList();
 	void configureList();
@@ -35,57 +35,22 @@ class ToDoManager
 	void save();
 	void load();
 public:
-	static ToDoManager* getinstance();
-	void menu()
-	{
-		if (!fs::exists("To-Do"))
-		{
-			fs::create_directory("To-Do");
-		}
-		int c = 0;
-		while (c < 6)
-		{
-			system("cls");
-			c = Menu::select_vertical({"Add list","Delete list","Configure list","Search","Save","Load","Exit"}, HorizontalAlignment::Left, 15);
-			switch (c)
-			{
-			case 0:
-				addList();
-				break;
-			case 1:
-				deleteList();
-				break;
-			case 2:
-				configureList();
-				break;
-			case 3:
-				search();
-				break;
-			case 4:
-				save();
-				break;
-			case 5:
-				load();
-				break;
-			default:
-				break;
-			}
-		}
-	};
+	static ToDoFacade* getinstance();
+	void menu();
 };
 
-ToDoManager* ToDoManager::instance = nullptr;
+ToDoFacade* ToDoFacade::instance = nullptr;
 
-ToDoManager* ToDoManager::getinstance()
+ToDoFacade* ToDoFacade::getinstance()
 {
 	if (instance == nullptr)
 	{
-		instance = new ToDoManager();
+		instance = new ToDoFacade();
 	}	
 	return instance;
 }
 
-void ToDoManager::addList()
+void ToDoFacade::addList()
 {
 	{
 		int m = 2;
@@ -107,7 +72,7 @@ void ToDoManager::addList()
 	List.push_back(make_shared<TaskList>(bs));
 }
 
-void ToDoManager::deleteList()
+void ToDoFacade::deleteList()
 {
 	int c = chooseList(List);
 	if (c < 0)
@@ -123,7 +88,7 @@ void ToDoManager::deleteList()
 	List.erase(b);
 }
 
-void ToDoManager::configureList()
+void ToDoFacade::configureList()
 {
 
 	int c = chooseList(List);
@@ -137,98 +102,9 @@ void ToDoManager::configureList()
 	manager->menu();
 }
 
-void ToDoManager::search()
+void ToDoFacade::search()
 {
-	auto searchConcrete = [&]()
-	{
-		bool isFound = false;
-		system("cls");
-		gotoxy(20, 14);
-		cout << "Task to search for: ";
-		string temp;
-		getline(cin, temp);
-		for_each(List.begin(), List.end(), [&](std::shared_ptr<TaskList> ptr)
-		{	
-				if (!isFound)
-				{
-					manager->setTaskList(ptr);
-					isFound = manager->searchConcrete(temp);
-				}
-				
-		});
-		if (!isFound)
-		{
-			cout << "No matches :(" << endl;
-			system("pause");
-		}
-	};
-	auto searchTag = [&]()
-	{
-		bool isFound = false;
-		string temp;
-		system("cls");
-		gotoxy(20, 14);
-		cout << "Tag to search for: ";
-		getline(cin, temp);
-		for_each(List.begin(), List.end(), [&](std::shared_ptr<TaskList> ptr)
-		{
-					manager->setTaskList(ptr);
-					isFound = manager->searchTag(temp);
-		});
-		if (!isFound)
-		{
-			cout << "No matches :(" << endl;
-			system("pause");
-		}
-	};
-	auto searchDate = [&]()
-	{
-		bool isFound = false;
-		system("cls");
-		gotoxy(20, 14);
-		cout << "Now you will input the deadline till which to search for" << endl;
-		system("pause");
-		Time less = getTime();
-		for_each(List.begin(), List.end(), [&](std::shared_ptr<TaskList> ptr)
-			{
-				manager->setTaskList(ptr);
-				isFound = manager->searchTime(less);
-			});
-		if (!isFound)
-		{
-			cout << "No matches :(" << endl;
-			system("pause");
-		}
-	};
-	auto searchPriority = [&]()
-	{
-		bool isFound = false;
-		Priority less = getPriority();
-		for_each(List.begin(), List.end(), [&](std::shared_ptr<TaskList> ptr)
-		{
-				manager->setTaskList(ptr);
-				isFound = manager->searchPriority(less);
-		});
-		if (!isFound)
-		{
-			cout << "No matches :(" << endl;
-			system("pause");
-		}
-	};
-	auto searchDeadline = [&]()
-	{
-		bool isFound = false;
-		for_each(List.begin(), List.end(), [&](std::shared_ptr<TaskList> ptr)
-			{
-				manager->setTaskList(ptr);
-				isFound = manager->searchDeadline();
-			});
-		if (!isFound)
-		{
-			cout << "No matches :(" << endl;
-			system("pause");
-		}
-	};
+	ISearchCommand* command = nullptr;
 	int c = 0;
 	while (c < 5)
 	{
@@ -237,27 +113,33 @@ void ToDoManager::search()
 		switch (c)
 		{
 		case 0:
-			searchConcrete();
+			command = new SearchConcrete(&List, manager);
 			break;
 		case 1:
-			searchTag();
+			command = new SearchTag(&List, manager);
 			break;
 		case 2:
-			searchDate();
+			command = new SearchDate(&List, manager);
 			break;
 		case 3:
-			searchPriority();
+			command = new SearchPriority(&List, manager);
 			break;
 		case 4:
-			searchDeadline();
+			command = new SearchDeadline(&List, manager);
 			break;
 		default:
 			break;
 		}
+		if (command)
+		{
+			command->execute();
+			delete command;
+			command = nullptr;
+		}
 	}
 }
 
-void ToDoManager::save()
+void ToDoFacade::save()
 {
 	bool c = getNoOrYes("Are you sure you want to save changes to files?");
 	if (c)
@@ -271,7 +153,7 @@ void ToDoManager::save()
 	}
 }
 
-void ToDoManager::load()
+void ToDoFacade::load()
  {
 	bool c = getNoOrYes("Are you sure you want to load from files?");
 	if (c)
@@ -301,3 +183,40 @@ void ToDoManager::load()
 		);
 	}
  }
+
+void ToDoFacade::menu()
+{
+	if (!fs::exists("To-Do"))
+	{
+		fs::create_directory("To-Do");
+	}
+	int c = 0;
+	while (c < 6)
+	{
+		system("cls");
+		c = Menu::select_vertical({ "Add list","Delete list","Configure list","Search","Save to file","Load from file","Exit" }, HorizontalAlignment::Left, 15);
+		switch (c)
+		{
+		case 0:
+			addList();
+			break;
+		case 1:
+			deleteList();
+			break;
+		case 2:
+			configureList();
+			break;
+		case 3:
+			search();
+			break;
+		case 4:
+			save();
+			break;
+		case 5:
+			load();
+			break;
+		default:
+			break;
+		}
+	}
+}

@@ -2,6 +2,6 @@
 
 int main()
 {
-	ToDoManager* application = ToDoManager::getinstance();
+	ToDoFacade* application = ToDoFacade::getinstance();
 	application->menu();
 }

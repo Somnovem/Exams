@@ -1,43 +1,18 @@
 #pragma once
-#include "Task.h"
-#include <vector>
-#include <algorithm>
+#include "SearchCommand.h"
 
-class TaskListManager
-{
-	static TaskListManager* instance;
-	std::shared_ptr<TaskList> taskList = nullptr;
-	TaskListManager() {};
-	void addTask();
-	void deleteTask();
-	void changeTask();
-	void clear();
-	void fullView() const;
-public:
-	static TaskListManager* getinstance();
-	void menu();
-	void setTaskList(std::shared_ptr<TaskList> _Other) { taskList = _Other; }
-	bool searchConcrete(const string& taska) const;
-	bool searchTag(const string& taga) const;
-	bool searchTime(const Time& less) const;
-	bool searchPriority(const Priority& less) const;
-	bool searchDeadline() const;
-	void save() const;
-	void load();
-};
+TaskListFacade* TaskListFacade::instance = nullptr;
 
-TaskListManager* TaskListManager::instance = nullptr;
-
-TaskListManager* TaskListManager::getinstance()
+TaskListFacade* TaskListFacade::getinstance()
 {
 	if (instance == nullptr)
 	{
-		instance = new TaskListManager();
+		instance = new TaskListFacade();
 	}
 	return instance;
 }
 
-void TaskListManager::addTask()
+void TaskListFacade::addTask()
 {
 	//show what tasks are already present
 	Task newTask;
@@ -87,9 +62,10 @@ void TaskListManager::addTask()
 
 	}
 	taskList->tasks.push_back(newTask);
+	taskList->sort();
 }
 
-void TaskListManager::deleteTask()
+void TaskListFacade::deleteTask()
 {
 	system("cls");
 	vector<string> tasks;
@@ -111,7 +87,7 @@ void TaskListManager::deleteTask()
 	taskList->tasks.erase(b);
 }
 
-void TaskListManager::clear()
+void TaskListFacade::clear()
 {
 	bool c = getNoOrYes("Are you sure you want to clear the list?");
 	if (c)
@@ -120,7 +96,7 @@ void TaskListManager::clear()
 	}
 }
 
-void TaskListManager::fullView()const
+void TaskListFacade::fullView()const
 {
 	system("cls");
 	if (taskList->tasks.empty())
@@ -143,7 +119,7 @@ void TaskListManager::fullView()const
 	system("pause");
 }
 
-void TaskListManager::changeTask()
+void TaskListFacade::changeTask()
 {
 	auto task = taskList->tasks.begin();
 	//choosing task to change
@@ -207,7 +183,7 @@ void TaskListManager::changeTask()
 	}
 }
 
-void TaskListManager::menu()
+void TaskListFacade::menu()
 {
 	int c = 0;
 	while (c < 5)
@@ -254,14 +230,14 @@ void TaskListManager::menu()
 	}
 }
 
-bool TaskListManager::searchConcrete(const string& taska) const
+bool TaskListFacade::searchConcrete(const string& task) const
 {
 	system("cls");
 	for (size_t i = 0; i < taskList->tasks.size(); i++)
 	{
 		auto b = taskList->tasks.begin();
 		advance(b, i);
-		if (b->getTask().find(taska) != string::npos)
+		if (b->getTask().find(task) != string::npos)
 		{
 			cout <<"List: " << taskList->name << endl;
 			b->print();
@@ -272,7 +248,7 @@ bool TaskListManager::searchConcrete(const string& taska) const
 	return false;
 }
 
-bool TaskListManager::searchTag(const string& taga) const
+bool TaskListFacade::searchTag(const string& tag) const
 {
 	bool found = false;
 	system("cls");
@@ -280,7 +256,7 @@ bool TaskListManager::searchTag(const string& taga) const
 	{
 		auto b = taskList->tasks.begin();
 		advance(b, i);
-		if (b->getTag().find(taga) != string::npos)
+		if (b->getTag().find(tag) != string::npos)
 		{
 			cout << "List: " << taskList->name << endl;
 			b->print();
@@ -295,7 +271,7 @@ bool TaskListManager::searchTag(const string& taga) const
 	return found;
 }
 
-bool TaskListManager::searchTime(const Time& less) const
+bool TaskListFacade::searchTime(const Time& less) const
 {
 	bool found = false;
 	system("cls");
@@ -317,7 +293,7 @@ bool TaskListManager::searchTime(const Time& less) const
 	return found;
 }
 
-bool TaskListManager::searchPriority(const Priority& less) const
+bool TaskListFacade::searchPriority(const Priority& less) const
 {
 	bool found = false;
 	system("cls");
@@ -339,7 +315,7 @@ bool TaskListManager::searchPriority(const Priority& less) const
 	return found;
 }
 
-bool TaskListManager::searchDeadline() const
+bool TaskListFacade::searchDeadline() const
 {
 	bool found = false;
 	system("cls");
@@ -363,12 +339,12 @@ bool TaskListManager::searchDeadline() const
 	return found;
 }
 
-void TaskListManager::save() const
+void TaskListFacade::save() const
 {
 		taskList->save();
 }
 
-void TaskListManager::load()
+void TaskListFacade::load()
 {
 	ifstream in("To-Do\\" + taskList->name + ".txt");
 	string newTask, newDeadline, newPriority, newTag;
@@ -378,4 +354,5 @@ void TaskListManager::load()
 		temp.load(newTask, newDeadline, newPriority, newTag);
 		taskList->tasks.push_back(temp);
 	}
+	taskList->sort();
 }
