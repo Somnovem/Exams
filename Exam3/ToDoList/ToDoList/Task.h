@@ -200,7 +200,18 @@ public:
 
 ostream& operator<<(ostream& out, const Time& t)
 {
-	out << t.hours << ":" << t.minutes << ":" << t.seconds << " " << t.day<< " " << t.month;
+	out << t.hours << ":";
+	if (t.minutes < 10)
+	{
+		out << "0";
+	}
+	out << t.minutes << ":";
+	if (t.seconds < 10)
+	{
+		out << "0";
+	}
+	out << t.seconds;
+	out << " " << t.day<< " " << t.month;
 	return out;
 }
 
