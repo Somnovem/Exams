@@ -355,7 +355,7 @@ Time getTime()
 	getWithCheck(s, 60);
 	cout << "Day: ";
 	getWithCheck(d, 32);
-	cout << "Month: ";
+	cout << "Month(number): ";
 	getWithCheck(mon, 13);
 	cin.ignore();
 	return Time(h, m, s, d, Month(mon));
@@ -374,6 +374,5 @@ Priority getPriority()
 	system("cls");
 	gotoxy(20, 10);
 	cout << "Choose priority: ";
-	int c = Menu::select_vertical({ "Low","Medium","High","Extreme" }, HorizontalAlignment::Center, 11);
-	return (Priority(c));
+	return (Priority(Menu::select_vertical({ "Low","Medium","High","Extreme" }, HorizontalAlignment::Center, 11)));
 }

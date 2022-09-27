@@ -35,7 +35,7 @@ protected:
 	TaskListFacade* manager;
 public:
 	ISearchCommand(list<std::shared_ptr<TaskList>>* l, TaskListFacade* m) : List{ l }, manager{ m } {}
-	virtual ~ISearchCommand() {}
+	virtual ~ISearchCommand() { }
 	virtual void execute() = 0;
 	void checkMatches(bool logic)
 	{
@@ -68,6 +68,7 @@ public:
 
 			});
 		checkMatches(isFound);
+
 	}
 };
 
@@ -88,6 +89,7 @@ public:
 				isFound = manager->searchTag(temp);
 			});
 		checkMatches(isFound);
+		system("pause");
 	}
 };
 
@@ -103,6 +105,7 @@ public:
 				isFound = manager->searchDeadline();
 			});
 		checkMatches(isFound);
+		system("pause");
 	}
 };
 
@@ -123,6 +126,7 @@ public:
 				isFound = manager->searchTime(less);
 			});
 		checkMatches(isFound);
+		system("pause");
 	}
 };
 
@@ -139,5 +143,6 @@ public:
 				isFound = manager->searchPriority(less);
 			});
 		checkMatches(isFound);
+		system("pause");
 	}
 };

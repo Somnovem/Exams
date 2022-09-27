@@ -48,14 +48,14 @@ void TaskListFacade::addTask()
 		gotoxy(15, 9);
 		if (getNoOrYes("Want to add tag?"))
 		{
-			newTask.setTag("");
-		}
-		else
-		{
 			string Tag;
 			cout << "Tag: ";
 			getline(cin, Tag);
 			newTask.setTag(Tag);
+		}
+		else
+		{
+			newTask.setTag("");
 		}
 
 	}
@@ -87,10 +87,7 @@ void TaskListFacade::deleteTask()
 
 void TaskListFacade::clear()
 {
-	if (getNoOrYes("Are you sure you want to clear the list?"))
-	{
-		taskList->tasks.clear();
-	}
+	if (getNoOrYes("Are you sure you want to clear the list?")) taskList->tasks.clear();
 }
 
 void TaskListFacade::fullView()const
@@ -260,11 +257,6 @@ bool TaskListFacade::searchTag(const string& tag) const
 			found = true;
 		}
 	}
-	if (found)
-	{
-		system("pause");
-	}
-
 	return found;
 }
 
@@ -283,10 +275,6 @@ bool TaskListFacade::searchTime(const Time& less) const
 			found = true;
 		}
 	}
-	if (found)
-	{
-		system("pause");
-	}
 	return found;
 }
 
@@ -304,10 +292,6 @@ bool TaskListFacade::searchPriority(const Priority& less) const
 			b->print();
 			found = true;
 		}
-	}
-	if (found)
-	{
-		system("pause");
 	}
 	return found;
 }
@@ -328,10 +312,6 @@ bool TaskListFacade::searchDeadline() const
 			b->print();
 			found = true;
 		}
-	}
-	if (found)
-	{
-		system("pause");
 	}
 	return found;
 }
