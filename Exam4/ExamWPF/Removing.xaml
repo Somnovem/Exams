@@ -1,0 +1,24 @@
+﻿<Window x:Class="ExamWPF.Removing"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ExamWPF"
+        mc:Ignorable="d"
+        Title="Removing" Height="450" Width="500
+        " Background="{StaticResource WindowBackgroundBrush}">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <ListBox x:Name="listbox1" Height="287" Grid.RowSpan="2" VerticalAlignment="Top" Margin="0,79,0,0" Grid.ColumnSpan="2" FontSize="14" SelectionChanged="listbox_SelectedIndexChanged"/>
+        <Label Content="Choose dictionary to remove:" FontSize="18" Margin="0,26,0,143"/>
+        <Button Name ="btn_remove" Content="Remove" MaxHeight="30" MaxWidth="80" Grid.Column="1" Margin="180,182,0,-5" Grid.Row="1" Click="Btn_Remove" VerticalContentAlignment="Stretch"/>
+        <Button Content="Exit" MaxHeight="30" MaxWidth="80" Grid.Column="0" Margin="0,182,170,-5" Grid.Row="1" Click="Btn_Exit" VerticalContentAlignment="Stretch"/>
+    </Grid>
+</Window>

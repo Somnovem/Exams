@@ -4,7 +4,6 @@ using System.Data;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Xml;
-
 namespace Exam
 {
     enum Languages
@@ -206,9 +205,6 @@ namespace Exam
             return null;
         }
     }
-
-
-
 
 
     //Manages the list of dictionaries

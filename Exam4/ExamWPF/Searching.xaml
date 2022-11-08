@@ -1,0 +1,24 @@
+﻿<Window x:Class="ExamWPF.Searching"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ExamWPF"
+        mc:Ignorable="d"
+        Title="Searching" Height="500" Width="800" Background="{StaticResource WindowBackgroundBrush}">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Button Content="Exit" Grid.Row="1" Height="30" Width="100" Click="Btn_Exit" Margin="0,190,300,10"/>
+        <TextBox Margin="109,84,335,108" Grid.ColumnSpan="2" Name="box1"/>
+        <Label Content="The word to search for:" Foreground="DarkOliveGreen" FontSize="20" Height="50" Width="400" Grid.ColumnSpan="2" Margin="109,45,291,147"/>
+        <TextBlock x:Name="block1" Height="200" Background="GhostWhite" Foreground ="DarkBlue" Grid.ColumnSpan="2" Margin="109,166,200,68" Grid.RowSpan="2" TextWrapping="Wrap"/>
+        <Button Content="Search" Height="30" Width="100" Click="Btn_Search" Grid.Column="1" Margin="85,82,215,105"/>
+    </Grid>
+</Window>
