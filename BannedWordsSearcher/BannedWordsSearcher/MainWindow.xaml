@@ -67,7 +67,8 @@
                     <ColumnDefinition Width="60*"/>
                     <ColumnDefinition Width="40*"/>
                 </Grid.ColumnDefinitions>
-                <Button   x:Name="btnLoadFromFile"  Grid.Row="1" Grid.Column="0" Content="Load from file" Margin="8,10" Grid.ColumnSpan="2" Click="btnLoadFromFile_Click"/>
+                <Button   x:Name="btnLoadFromFile"  Grid.Row="1" Grid.Column="0" Content="Load from file"
+                          Margin="8,10" Grid.ColumnSpan="2" Click="btnLoadFromFile_Click"/>
                 <TextBox  x:Name="edBannedWord"  Grid.Row="0" Grid.Column="0" Margin="5,15"/>
                 <Button   x:Name="btnAddBannedWord"  Grid.Row="0" Grid.Column="1" Content="Add" Margin="8,10" Click="btnAddBannedWord_Click"/>
             </Grid>
@@ -109,8 +110,10 @@
                     <RowDefinition Height="30*"/>
                     <RowDefinition Height="55*"/>
                 </Grid.RowDefinitions>
-                <TextBlock x:Name="lblDestination" TextWrapping="Wrap" Grid.Row="0" VerticalAlignment="Bottom" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" Foreground="MediumVioletRed"/>
-                <Button x:Name="btnChooseDestination" Content="Choose Destination" Grid.Row="1" Margin="10,10,10,30" Click="btnChooseDestination_Click"/>
+                <TextBlock x:Name="lblDestination" TextWrapping="Wrap" Grid.Row="0" VerticalAlignment="Bottom"
+                           FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Foreground="MediumVioletRed"/>
+                <Button x:Name="btnChooseDestination" Content="Choose Destination" Grid.Row="1" 
+                        Margin="10,10,10,30" Click="btnChooseDestination_Click"/>
                 <ListBox Grid.Row="2" x:Name="lbTop" Margin="10,5,5,5"/>
             </Grid>
         </Grid>
@@ -136,6 +139,8 @@
             <Button x:Name="btnPause" Grid.Column="1" Click="Pause_Click">
                 <Image Source="Images/play.ico"/>
             </Button>
+            <TextBlock x:Name="edState" Text="Not started" Foreground="HotPink" HorizontalAlignment="Left"
+                       VerticalAlignment="Center" FontSize="26" FontWeight="ExtraBold" Margin="120,0,0,0"/>
         </Grid>
     </Grid>
 </Window>

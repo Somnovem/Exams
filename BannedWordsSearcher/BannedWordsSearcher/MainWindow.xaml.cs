@@ -100,7 +100,7 @@ namespace BannedWordsSearcher
                             Console.WriteLine(messages[1]);
                             Console.ForegroundColor = ConsoleColor.White;
                         }
-                        else MessageBox.Show(messages[1]);
+                        else MessageBox.Show(messages[1],"Result",MessageBoxButton.OK,MessageBoxImage.Information);
                         btnStop_Click(null, null);
                         if (wasStartedFromConsole)
                         {
@@ -229,6 +229,7 @@ namespace BannedWordsSearcher
                 filesToSearch = 0;
                 lblProcess.Content = $"Files processed: {filesSearched}/{filesToSearch}";
                 mainProgressBar.Value = 0;
+                edState.Text = "Counting and processing files...";
                 lbTop.Items.Clear();
 
 
@@ -269,7 +270,7 @@ namespace BannedWordsSearcher
                 if(wasStartedFromConsole)
                     Console.WriteLine(message);
                 else
-                    MessageBox.Show(message);
+                    MessageBox.Show(message, "Result", MessageBoxButton.OK, MessageBoxImage.Information);
                 parsersResult += parser.Report;
                 runningParsers.Remove(parser);
             }
@@ -293,6 +294,7 @@ namespace BannedWordsSearcher
             btnStop.IsEnabled = false;
             btnFreeze.IsEnabled = false;
             btnResume.IsEnabled = true;
+            edState.Text = "Process frozen";
         }
 
         private void btnStop_Click(object sender, RoutedEventArgs e)
@@ -304,6 +306,7 @@ namespace BannedWordsSearcher
                 btnResume.IsEnabled = false;
                 btnFreeze.IsEnabled = false;
                 btnStart.IsEnabled = true;
+                edState.Text = "Not started";
             }
         }
 
@@ -359,6 +362,7 @@ namespace BannedWordsSearcher
             btnStop.IsEnabled = true;
             btnResume.IsEnabled = false;
             btnFreeze.IsEnabled = true;
+            edState.Text = "Counting and processing files...";
         }
 
         private void btnChooseDestination_Click(object sender, RoutedEventArgs e)
