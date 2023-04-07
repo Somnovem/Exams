@@ -31,6 +31,7 @@ namespace BannedWordsSearcher
         private string destinationPath;
         private Thread reportingThread;
         private bool wasStartedFromConsole;
+        private bool stoppedManually;
 
 
         public MainWindow(bool fromConsole = false,string destinationPath = null, string[] bannedWordsArray = null)
@@ -60,6 +61,7 @@ namespace BannedWordsSearcher
                 musicPlayer.Open(new Uri(musicPath, UriKind.RelativeOrAbsolute));
                 musicPlayer.Volume = 0.05;
                 musicPlayer.MediaEnded += Repeater;
+                stoppedManually = false;
                 string[] drives = Directory.GetLogicalDrives();
                 foreach (var item in drives)
                 {
@@ -92,7 +94,7 @@ namespace BannedWordsSearcher
                         mainProgressBar.Value = progress * 100;
                     }
 
-                    if (runningParsers.Count == 0 && parsersToAwait.Count == 0)
+                    if (runningParsers.Count == 0 && parsersToAwait.Count == 0 && !stoppedManually)
                     {
                         if (wasStartedFromConsole)
                         {
@@ -100,7 +102,8 @@ namespace BannedWordsSearcher
                             Console.WriteLine(messages[1]);
                             Console.ForegroundColor = ConsoleColor.White;
                         }
-                        else MessageBox.Show(messages[1],"Result",MessageBoxButton.OK,MessageBoxImage.Information);
+                        else
+                            MessageBox.Show(messages[1],"Result",MessageBoxButton.OK,MessageBoxImage.Information);
                         btnStop_Click(null, null);
                         if (wasStartedFromConsole)
                         {
@@ -231,7 +234,7 @@ namespace BannedWordsSearcher
                 mainProgressBar.Value = 0;
                 edState.Text = "Counting and processing files...";
                 lbTop.Items.Clear();
-
+                stoppedManually = false;
 
                 int count = 0;
                 foreach (var drive in drivesToCheck)
@@ -299,6 +302,7 @@ namespace BannedWordsSearcher
 
         private void btnStop_Click(object sender, RoutedEventArgs e)
         {
+            stoppedManually = true;
             FinishSearching();
             if (!wasStartedFromConsole)
             {

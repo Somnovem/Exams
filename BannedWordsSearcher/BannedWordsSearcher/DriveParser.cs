@@ -98,14 +98,14 @@ namespace BannedWordsSearcher
                 timer.Start();
                 Dictionary<string, int> localBannedWordsEncountered = new Dictionary<string, int>();
                 counter = 0;
-                foreach (var file in filesToCheck)
+                for(int i = 0;i < filesToCheck.Length; i++)
                 {
                     if (State == ParserState.RUNNING)
                     {
                         string[] lines = null;
                         try
                         {
-                            lines = File.ReadAllLines(file);
+                            lines = File.ReadAllLines(filesToCheck[i]);
                         }
                         catch
                         {
@@ -147,12 +147,12 @@ namespace BannedWordsSearcher
                         string destinationFilePath = "";
                         if (bannedWordEncountered)
                         {
-                            FileInfo info = new FileInfo(file);
+                            FileInfo info = new FileInfo(filesToCheck[i]);
                             string fileNameRedacted = info.Name.Split('.')[0] + "Redacted" + info.Extension;
                             destinationFilePath = Path.Combine(destinationPath, fileNameRedacted);
                             try
                             {
-                                File.Copy(file, Path.Combine(destinationPath, info.Name), true);
+                                File.Copy(filesToCheck[i], Path.Combine(destinationPath, info.Name), true);
                                 File.WriteAllText(destinationFilePath, redactedText);
                             }
                             catch
@@ -160,8 +160,8 @@ namespace BannedWordsSearcher
                                 //Access was denied, or file is being used by another process
                             }
                         }
-                        Report += $"Read file: {file}\n";
-                        Report += $"Original file size: {new FileInfo(file).Length} bytes\n";
+                        Report += $"Read file: {filesToCheck[i]}\n";
+                        Report += $"Original file size: {new FileInfo(filesToCheck[i]).Length} bytes\n";
                         foreach (var item in localBannedWordsEncountered.Keys)
                         {
                             Report += $"Encountered {item} -> {localBannedWordsEncountered[item]} times\n";
