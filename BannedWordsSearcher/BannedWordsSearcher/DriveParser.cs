@@ -117,8 +117,14 @@ namespace BannedWordsSearcher
                         bannedWordEncountered = false;
                         string tempLine;
                         localBannedWordsEncountered.Clear();
+                        bool processAborted = false;
                         foreach (string line in lines)
                         {
+                            if (State != ParserState.RUNNING)
+                            {
+                                processAborted = true;
+                                break;
+                            }
                             tempLine = line;
                             string[] words = line.Split(" .,!?;".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                             if (words.Length > 0)
@@ -144,33 +150,36 @@ namespace BannedWordsSearcher
                                 if (bannedWordEncountered) redactedText += tempLine + '\n';
                             }
                         }
-                        string destinationFilePath = "";
-                        if (bannedWordEncountered)
+                        if (!processAborted)
                         {
-                            FileInfo info = new FileInfo(filesToCheck[i]);
-                            string fileNameRedacted = info.Name.Split('.')[0] + "Redacted" + info.Extension;
-                            destinationFilePath = Path.Combine(destinationPath, fileNameRedacted);
-                            try
+                            string destinationFilePath = "";
+                            if (bannedWordEncountered)
                             {
-                                File.Copy(filesToCheck[i], Path.Combine(destinationPath, info.Name), true);
-                                File.WriteAllText(destinationFilePath, redactedText);
+                                FileInfo info = new FileInfo(filesToCheck[i]);
+                                string fileNameRedacted = info.Name.Split('.')[0] + "Redacted" + info.Extension;
+                                destinationFilePath = Path.Combine(destinationPath, fileNameRedacted);
+                                try
+                                {
+                                    File.Copy(filesToCheck[i], Path.Combine(destinationPath, info.Name), true);
+                                    File.WriteAllText(destinationFilePath, redactedText);
+                                }
+                                catch
+                                {
+                                    //Access was denied, or file is being used by another process
+                                }
                             }
-                            catch
+                            Report += $"Read file: {filesToCheck[i]}\n";
+                            Report += $"Original file size: {new FileInfo(filesToCheck[i]).Length} bytes\n";
+                            foreach (var item in localBannedWordsEncountered.Keys)
                             {
-                                //Access was denied, or file is being used by another process
+                                Report += $"Encountered {item} -> {localBannedWordsEncountered[item]} times\n";
                             }
+                            if (!string.IsNullOrEmpty(destinationFilePath)) Report += $"File size after changes: {new FileInfo(destinationFilePath).Length} bytes\n";
+                            Report += '\n';
+                            counter++;
+                            threadStabilizer.WaitOne();
+                            threadStabilizer.Set();
                         }
-                        Report += $"Read file: {filesToCheck[i]}\n";
-                        Report += $"Original file size: {new FileInfo(filesToCheck[i]).Length} bytes\n";
-                        foreach (var item in localBannedWordsEncountered.Keys)
-                        {
-                            Report += $"Encountered {item} -> {localBannedWordsEncountered[item]} times\n";
-                        }
-                        if (!string.IsNullOrEmpty(destinationFilePath)) Report += $"File size after changes: {new FileInfo(destinationFilePath).Length} bytes\n";
-                        Report += '\n';
-                        counter++;
-                        threadStabilizer.WaitOne();
-                        threadStabilizer.Set();
                     }
                     else if (State == ParserState.SUSPENDED) Thread.Sleep(200);
                     else break;
