@@ -118,12 +118,12 @@
             <Label Content="Files"         Grid.Row="0" Grid.Column="1" Foreground="#00bfff" Style="{StaticResource HeaderLabel}"/>
             <Grid Grid.Row="0" Grid.Column="2">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="50*"/>
-                    <ColumnDefinition Width="50*"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <Label Content="Tag search"  Grid.Column="0"   Foreground="#33ffbb" Style="{StaticResource HeaderLabel}"/>
-                <Label Content="(Double-click an item to open it)" FontSize="16" Foreground=" #66ffcc" Grid.Column="1" 
-                       VerticalAlignment="Bottom" HorizontalContentAlignment="Center"/>
+                <TextBlock Text="(Double-click an item to open it)" Foreground=" #66ffcc" Grid.Column="1" 
+                       VerticalAlignment="Bottom"  TextWrapping="Wrap" FontSize="16"/>
             </Grid>
             <Grid Grid.Row="1" Grid.Column="1">
                 <Grid.ColumnDefinitions>
@@ -166,7 +166,7 @@
         <Label Content="Destination:" Grid.Row="2" Grid.Column="0" Foreground="#fff" Style="{StaticResource DefaultLabel}" FontSize="12"/>
         <Label Content="Used threads" Grid.Row="3" Grid.Column="0" Foreground="#fff" Style="{StaticResource DefaultLabel}" FontSize="11"/>
         <Label Content="Tag(opt.):" Grid.Row="4" Grid.Column="0" Foreground="#fff" Style="{StaticResource DefaultLabel}" FontSize="14"/>
-        <TextBox x:Name="edDownloadUrl" Grid.Column="1" Grid.Row="1" Text="https://upload.wikimedia.org/wikipedia/commons/1/15/Cat_August_2010-4.jpg"/>
+        <TextBox x:Name="edDownloadUrl" Grid.Column="1" Grid.Row="1" FontSize="14" VerticalAlignment="Stretch"/>
         <Grid Grid.Row="2" Grid.Column="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="70*"/>

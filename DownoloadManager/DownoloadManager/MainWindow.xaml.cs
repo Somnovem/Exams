@@ -38,7 +38,7 @@ namespace DownoloadManager
             DataContext = new MainViewModel();
             viewModel = (MainViewModel)DataContext;
             saveFileDialog = new SaveFileDialog();
-            saveFileDialog.InitialDirectory = "C:\\";
+            saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             saveFileDialog.Title = "Store and save files as...";
             destinationPath = "";
         }
@@ -198,6 +198,7 @@ namespace DownoloadManager
             moveDialog.InitialDirectory = info.DirectoryName;
             moveDialog.Title = "Choose the new path of the file...";
             if (moveDialog.ShowDialog() != true) return;
+            if (File.Exists(moveDialog.FileName)) File.Delete(moveDialog.FileName);
             File.Move(file.FullPath, moveDialog.FileName);
             file.FullPath = moveDialog.FileName;
             file.FileName = moveDialog.SafeFileName;

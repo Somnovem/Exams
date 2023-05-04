@@ -40,7 +40,6 @@ namespace DownoloadManager
             {
                 request = (HttpWebRequest)WebRequest.Create(url);
                 response = (HttpWebResponse)request.GetResponse();
-                
             }
             catch 
             {
@@ -149,7 +148,7 @@ namespace DownoloadManager
                             return;
                         }
 
-                        Thread.Sleep(100); // wait for 100ms
+                        Thread.Sleep(100);
                     }
                     data.AddRange(buffer.Take(bytesRead));
 
